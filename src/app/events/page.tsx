@@ -7,6 +7,7 @@ import supabase from "@/lib/supabase";
 import { IoTrashBin } from "react-icons/io5";
 import LoadingAnimation from "@/app/components/utils/loading";
 import toast, {Toaster} from "react-hot-toast";
+import Image from "next/image";
 
 export default function Page() {
     const [events, setEvents] = React.useState<Event[]>(null);
@@ -71,7 +72,7 @@ export default function Page() {
                                                 {event.imageUrl &&
                                                     <CardOverflow>
                                                         <AspectRatio ratio="2">
-                                                            <img src={event.imageUrl} alt="Event Cover Image"/>
+                                                            <Image src={event.imageUrl} alt="Event Cover Image"/>
                                                         </AspectRatio>
                                                     </CardOverflow>
                                                 }
