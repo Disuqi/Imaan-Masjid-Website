@@ -77,8 +77,8 @@ export default function PrayersTimetable()
                 <div className="border border-gray-200 bg-white m-5">
                     <div className="p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
-                            <h1 className="text-xl md:text-3xl font-bold">Monday 17th December 2023</h1>
-                            <h4 className="text-md font-light md:text-xl">25 Rabi' Al Awwal 1554</h4>
+                            <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
+                            <h4 className="text-md font-light md:text-xl">{formatToHijriDate(today)}</h4>
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
                             <Link href="/timetable">
@@ -117,4 +117,48 @@ export default function PrayersTimetable()
             </Button>
         </Link>
     </section>;
+}
+
+function formatToHijriDate(date) {
+    const options = {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    };
+    return date.toLocaleDateString('en-SA-u-ca-islamic-umalqura', options);
+}
+
+function formatDateWithSuffix(date) {
+    const options = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    };
+
+    // @ts-ignore
+    const formatter = new Intl.DateTimeFormat('en-UK', options);
+    let formattedDate = formatter.format(date);
+
+    const day = date.getDate();
+    const ordinalSuffix = getOrdinalSuffix(day);
+
+    return formattedDate.replace(/\d+/, (match) => match + ordinalSuffix);
+}
+
+function getOrdinalSuffix(day) {
+    if (day >= 11 && day <= 13) {
+        return 'th';
+    }
+    switch (day % 10) {
+        case 1:
+            return 'st';
+        case 2:
+            return 'nd';
+        case 3:
+            return 'rd';
+        default:
+            return 'th';
+    }
 }
