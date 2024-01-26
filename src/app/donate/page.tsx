@@ -1,7 +1,7 @@
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
 import Link from "next/link";
-import Image from "next/image";
+import img from "next/image";
 
 export default function Page()
 {
@@ -15,7 +15,6 @@ export default function Page()
                     <div className="bg-yellow-100 border border-red-900 py-4 px-6 rounded-md w-full text-center flex flex-col gap-2">
                         <h1 className="font-bold text-2xl">Surat Al-Baqarah [2:245]</h1>
                         <div className="flex flex-row gap-1 text-3xl justify-center items-center">
-                            <Image src={"/245.webp"} alt="Aya 2:245" className="h-20"/>
                             <p>مَّن ذَا ٱلَّذِى يُقْرِضُ ٱللَّهَ قَرْضًا حَسَنًۭا فَيُضَـٰعِفَهُۥ لَهُۥٓ أَضْعَافًۭا كَثِيرَةًۭ ۚ
                                 وَٱللَّهُ يَقْبِضُ وَيَبْصُۜطُ وَإِلَيْهِ تُرْجَعُونَ</p>
                         </div>
@@ -53,17 +52,17 @@ export default function Page()
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <h1 className="font-black text-3xl m-2">1.</h1>
                                 <h1 className="w-full">£350 Per Prayer Mat</h1>
-                                <Image className="w-full h-32 object-contain" src="/prayer-rug.png" alt="payer rug image"/>
+                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="payer rug image"/>
                             </div>
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <h1 className="font-black text-3xl m-2">2.</h1>
                                 <h1 className="w-full">£50 Per Brick</h1>
-                                <Image className="w-full h-24 object-contain" src="/wall.png" alt="wall image"/>
+                                <img className="w-full h-24 object-contain" src="/wall.png" alt="wall image"/>
                             </div>
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <h1 className="font-black text-3xl m-2">3.</h1>
                                 <h1 className="w-full">Long Term Loan</h1>
-                                <Image className="w-full h-28 object-contain" src="/loan.png" alt="money image"/>
+                                <img className="w-full h-28 object-contain" src="/loan.png" alt="money image"/>
                             </div>
                         </div>
                     </div>
