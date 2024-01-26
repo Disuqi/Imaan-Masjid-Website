@@ -17,14 +17,13 @@ export default function Header()
             { key:3, title: "About", link: "/#about"},
         ];
 
-    const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize>(ScreenSize.xl);
+    const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize>(widthToScreenSize(window.innerWidth));
 
     useEffect(() => {
         const updateScreenSize = () =>
         {
             setCurrentScreenSize(widthToScreenSize(window.innerWidth));
         }
-        setIsMenuOpen(false);
         window.addEventListener('resize', updateScreenSize);
         // Remove the event listener when the component unmounts
         return () => {
@@ -33,7 +32,6 @@ export default function Header()
     }, []);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     return <>
         <nav className="h-[8vh] border-b sticky top-0 left-0 w-full bg-white z-10">
             <div className="container mx-auto flex flex-row items-center w-full h-full">
@@ -58,8 +56,10 @@ export default function Header()
                             <div className="flex flex-col justify-start gap-2 items-start mt-10 w-full">
                                 {menuItems.map((item) =>
                                     // eslint-disable-next-line react/jsx-key
-                                    (<Link key={item.key} href={item.link}
-                                              className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">{item.title}</Link>))}
+                                    (<Link key={item.key} onClick={() => setIsMenuOpen(false)} href={item.link} scroll={true}
+                                              className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
+                                        {item.title}
+                                    </Link>))}
                                 <Link href="/donate" className="w-full pl-10 py-4 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
                             </div>
                         </Drawer>
