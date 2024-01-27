@@ -72,7 +72,7 @@ export default function Page() {
                                                 {event.imageUrl &&
                                                     <CardOverflow>
                                                         <AspectRatio ratio="2">
-                                                            <Image src={event.imageUrl} alt="Event Cover Image"/>
+                                                            <img src={event.imageUrl} alt="Event Cover Image"/>
                                                         </AspectRatio>
                                                     </CardOverflow>
                                                 }

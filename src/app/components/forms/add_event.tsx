@@ -24,7 +24,7 @@ export default function AddEventForm(props: {onSubmit: (event: FormEvent) => voi
                 <label className="text-sm text-gray-300">Image</label>
                 <label className="w-96 h-52 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200 transition duration-100 ease-out cursor-pointer" htmlFor="eventImageFileInput">
                     {image ?
-                        <Image src={image} className="w-full h-full object-cover" alt="Uploaded Image"/>
+                        <img src={image} className="w-full h-full object-cover" alt="Uploaded Image"/>
                         :
                         <BsFillImageFill className="w-full h-full p-10" />
                     }
