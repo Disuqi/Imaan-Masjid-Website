@@ -97,7 +97,6 @@ export default function ShareButton(props: {title: string, url: string})
                                 </div>
                             </div>
                         </DialogContent>
-                        <Toaster position="top-center"/>
                     </ModalDialog>
                 </Modal>
             }
