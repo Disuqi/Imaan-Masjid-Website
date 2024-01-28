@@ -52,7 +52,7 @@ export default function Page() {
         }
     };
 
-    supabase.storage.from("event_images").getPublicUrl("test.jpg")
+    supabase.storage.from("event_images").getPublicUrl("test.jpg");
     return <>
         <div className="container mx-auto min-h-[54.65vh] w-full">
             {
@@ -67,7 +67,7 @@ export default function Page() {
                             <div className="flex flex-row gap-10 flex-wrap m-10">
                                 {events.map((event) =>
                                         // eslint-disable-next-line react/jsx-key
-                                        <div>
+                                        <div id={titleToId(event.title)}>
                                             <Card variant="outlined" sx={{width: "24rem"}}>
                                                 {event.imageUrl &&
                                                     <CardOverflow>
@@ -88,7 +88,7 @@ export default function Page() {
                                                                     </Button>
                                                                 </>
                                                             }
-                                                            <ShareButton title={event.title} url={"/events"}/>
+                                                            <ShareButton title={event.title} url={"/events#" + titleToId(event.title)}/>
                                                         </div>
                                                 </div>
                                                 <Typography level="body-sm">{event.description}</Typography>
@@ -140,4 +140,9 @@ function formatTime(date: Date) : string
     const formattedMinutes = String(date.getMinutes()).padStart(2, '0');
 
     return formattedHours + ":" + formattedMinutes;
+}
+
+function titleToId(title: string) : string
+{
+    return title.toLowerCase().replace(/\s/g, '_');
 }

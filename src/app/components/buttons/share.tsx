@@ -25,6 +25,7 @@ export default function ShareButton(props: {title: string, url: string})
         });
     };
 
+    const url = window.location.origin + props.url;
     return <>
         <Tooltip title="Share">
             <Button variant="plain" size="sm" onClick={() => setIsShareOpen(true)}>
@@ -67,25 +68,25 @@ export default function ShareButton(props: {title: string, url: string})
                         <DialogContent>
                             <div className="flex flex-col gap-2 w-full h-full">
                                 <div className="flex flex-row w-full justify-center items-center gap-2 py-1 w-full h-full my-4">
-                                    <FacebookShareButton url={props.url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
+                                    <FacebookShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
                                         <FacebookIcon size={56} round/>
                                     </FacebookShareButton>
-                                    <FacebookMessengerShareButton url={props.url} title={props.title} appId={"Imaan Masjid"} className="hover:brightness-125 transition duration-100 ease-out">
+                                    <FacebookMessengerShareButton url={url} title={props.title} appId={"Imaan Masjid"} className="hover:brightness-125 transition duration-100 ease-out">
                                         <FacebookMessengerIcon size={56} round/>
                                     </FacebookMessengerShareButton>
-                                    <WhatsappShareButton url={props.url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
+                                    <WhatsappShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
                                         <WhatsappIcon size={56} round/>
                                     </WhatsappShareButton>
-                                    <TelegramShareButton url={props.url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
+                                    <TelegramShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
                                         <TelegramIcon size={56} round/>
                                     </TelegramShareButton>
-                                    <EmailShareButton url={props.url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
+                                    <EmailShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
                                         <EmailIcon size={56} round/>
                                     </EmailShareButton>
                                 </div>
                                 <div className="flex flex-row gap-2 justify-start items-center">
                                     <div className="py-2 px-4 border border-gray-300 rounded-md text-md bg-gray-200">
-                                        <p>{props.url}</p>
+                                        <p>{url}</p>
                                     </div>
                                     <button onClick={copyUrl} className="rounded-md flex flex-row items-center gap-2 px-4 py-2 bg-blue-500 hover:brightness-125 text-white text-md">
                                         <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
