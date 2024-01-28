@@ -22,7 +22,7 @@ export default function AddEventForm(props: {onSubmit: (event: FormEvent) => voi
         <form className="flex flex-col gap-2 justify-center items-start" onSubmit={props.onSubmit}>
             <div className="flex flex-col">
                 <label className="text-sm text-gray-300">Image</label>
-                <label className="w-96 h-52 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200 transition duration-100 ease-out cursor-pointer" htmlFor="eventImageFileInput">
+                <label className="md:w-96 md:h-52 w-72 h-40 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200 transition duration-100 ease-out cursor-pointer" htmlFor="eventImageFileInput">
                     {image ?
                         <img src={image} className="w-full h-full object-cover" alt="Uploaded Image"/>
                         :
