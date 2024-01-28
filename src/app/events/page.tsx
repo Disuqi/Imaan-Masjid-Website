@@ -109,7 +109,7 @@ export default function Page() {
                                                     Time
                                                 </Typography>
                                                 <Typography level="body-xs" fontWeight="md" textColor="text.secondary">
-                                                    {event.date.getHours() + ":" + event.date.getMinutes()}
+                                                    {formatTime(event.date)}
                                                 </Typography>
                                             </CardContent>
                                         </CardOverflow>}
@@ -132,4 +132,12 @@ function getEventImageUrl(event : Event) : string
 {
     const response = supabase.storage.from("event_images").getPublicUrl(event.image);
     return response.data.publicUrl;
+}
+
+function formatTime(date: Date) : string
+{
+    const formattedHours = String(date.getHours()).padStart(2, '0');
+    const formattedMinutes = String(date.getMinutes()).padStart(2, '0');
+
+    return formattedHours + ":" + formattedMinutes;
 }
