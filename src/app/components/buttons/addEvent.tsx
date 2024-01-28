@@ -11,7 +11,7 @@ import {Size} from "@/app/components/utils/size";
 export default function AddEventBtn()
 {
     const [modalState, setModalState] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (formEvent) =>
     {
