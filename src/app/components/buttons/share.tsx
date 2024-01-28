@@ -16,16 +16,16 @@ import { Transition } from 'react-transition-group';
 export default function ShareButton(props: {title: string, url: string})
 {
     const [isShareOpen, setIsShareOpen] = useState(false);
+    const url = window.location.origin + props.url;
 
     const copyUrl = () =>
     {
-        navigator.clipboard.writeText(props.url).then(() =>
+        navigator.clipboard.writeText(url).then(() =>
         {
             toast.success("Copied URL to clipboard", );
         });
     };
 
-    const url = window.location.origin + props.url;
     return <>
         <Tooltip title="Share">
             <Button variant="plain" size="sm" onClick={() => setIsShareOpen(true)}>
