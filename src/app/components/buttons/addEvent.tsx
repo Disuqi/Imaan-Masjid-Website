@@ -6,11 +6,12 @@ import supabase from "@/lib/supabase";
 import toast from "react-hot-toast";
 import {Event} from "@/app/entities/event";
 import LoadingAnimation from "@/app/components/utils/loading";
+import {Size} from "@/app/components/utils/size";
 
 export default function AddEventBtn()
 {
     const [modalState, setModalState] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const onSubmit = async (formEvent) =>
     {
@@ -31,7 +32,7 @@ export default function AddEventBtn()
                 {loading ?
                     <div className="flex flex-row w-full items-center justify-center gap-6">
                         <h1 className="font-bold text-3xl">Uploading</h1>
-                        <LoadingAnimation width="12" height="12"/>
+                        <LoadingAnimation size={Size.M}/>
                     </div> :
                 <><ModalClose/>
                 <DialogTitle>Add Event</DialogTitle>
