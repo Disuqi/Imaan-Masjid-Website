@@ -66,7 +66,7 @@ export default function Header()
                                                    className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
                                                 {item.title}
                                             </Link>))}
-                                        <Link href="/donate" className="w-full pl-10 py-4 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
+                                        <Link href="/donate" onClick={() => setIsMenuOpen(false)} className="w-full pl-10 py-4 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
                                     </div>
                                 </Drawer>
                             </div>
