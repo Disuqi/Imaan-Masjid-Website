@@ -81,9 +81,11 @@ export default function PrayersTimetable()
                             <h4 className="text-md font-light md:text-xl">{formatToHijriDate(today)}</h4>
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
-                            <Link href="/timetable">
-                                <Button><h1 className="text-sm md:text-lg">Full Timetable</h1></Button>
-                            </Link>
+                            <Button>
+                                <Link href="/timetable">
+                                    <h1 className="text-sm md:text-lg">Full Timetable</h1>
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                     <div className="bg-gray-50 py-2">

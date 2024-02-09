@@ -23,11 +23,16 @@ export default function AddEventBtn()
         setModalState(false);
     };
 
+    const closeModal = () =>
+    {
+        if (!loading)
+            setModalState(false);
+    }
     return <>
         <Button size="lg" onClick={() => setModalState(true)}>
             Add
         </Button>
-        <Modal open={modalState} onClose={() => setModalState(false)}>
+        <Modal open={modalState} onClose={closeModal}>
             <ModalDialog>
                 {loading ?
                     <div className="flex flex-row w-full items-center justify-center gap-6">

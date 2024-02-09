@@ -67,23 +67,6 @@ export default function ShareButton(props: {title: string, url: string})
                         <DialogTitle level="h3">Share</DialogTitle>
                         <DialogContent>
                             <div className="flex flex-col gap-2 w-full h-full">
-                                <div className="flex flex-row w-full justify-center items-center gap-2 py-1 w-full h-full my-4">
-                                    <FacebookShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
-                                        <FacebookIcon size={56} round/>
-                                    </FacebookShareButton>
-                                    <FacebookMessengerShareButton url={url} title={props.title} appId={"Imaan Masjid"} className="hover:brightness-125 transition duration-100 ease-out">
-                                        <FacebookMessengerIcon size={56} round/>
-                                    </FacebookMessengerShareButton>
-                                    <WhatsappShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
-                                        <WhatsappIcon size={56} round/>
-                                    </WhatsappShareButton>
-                                    <TelegramShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
-                                        <TelegramIcon size={56} round/>
-                                    </TelegramShareButton>
-                                    <EmailShareButton url={url} title={props.title} className="hover:brightness-125 transition duration-100 ease-out">
-                                        <EmailIcon size={56} round/>
-                                    </EmailShareButton>
-                                </div>
                                 <div className="flex flex-row gap-2 justify-start items-center">
                                     <div className="py-2 px-4 border border-gray-300 rounded-md text-md bg-gray-200">
                                         <p>{url}</p>

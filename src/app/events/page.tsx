@@ -104,13 +104,20 @@ export default function Page() {
                                                 <Typography level="body-xs" fontWeight="md" textColor="text.secondary">
                                                     {event.date.toLocaleDateString()}
                                                 </Typography>
-                                                <Divider orientation="vertical" />
-                                                <Typography level="body-xs" fontWeight="sm" textColor="text.secondary">
-                                                    Time
-                                                </Typography>
-                                                <Typography level="body-xs" fontWeight="md" textColor="text.secondary">
-                                                    {formatTime(event.date)}
-                                                </Typography>
+
+                                                {
+                                                    (event.date.getHours() != 0 || event.date.getMinutes() != 0) &&
+                                                    <>
+                                                        <Divider orientation="vertical" />
+                                                        <Typography level="body-xs" fontWeight="sm" textColor="text.secondary">
+                                                            Time
+                                                        </Typography>
+                                                        <Typography level="body-xs" fontWeight="md" textColor="text.secondary">
+                                                            {formatTime(event.date)}
+                                                        </Typography>
+                                                    </>
+                                                }
+
                                             </CardContent>
                                         </CardOverflow>}
                                     </Card>
