@@ -5,10 +5,10 @@ import Link from "next/link";
 export default function EditEventBtn()
 {
     return <>
-        <Link href="/events">
-            <Button size="lg">
-                Edit
-            </Button>
-        </Link>
+        <Button component="a" size="lg">
+            <Link href="/events">
+                    Edit
+            </Link>
+        </Button>
     </>
 }

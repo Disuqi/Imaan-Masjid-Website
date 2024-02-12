@@ -7,7 +7,8 @@ import Header from "@/app/components/header";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Imaan Masjid'
+    title: 'Imaan Masjid',
+    icons: { icon: "favicon.svg"},
 }
 
 export default function RootLayout({

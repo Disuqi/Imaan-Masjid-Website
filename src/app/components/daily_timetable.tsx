@@ -2,64 +2,11 @@ import React from "react";
 import Link from "next/link";
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
+import {SalahTime, SalahType} from "./utils/salah";
+import LinkButton from "@/app/components/buttons/linkButton";
+import {formatDateWithSuffix, formatToHijriDate} from "@/app/components/utils/date";
 
-enum SalahType
-{
-    Fajr,
-    Dhuhur,
-    Asr,
-    Mughrib,
-    Isha
-}
-
-class SalahTime {
-    constructor(
-        public readonly salah : SalahType,
-        public readonly adhan: string,
-        public readonly iqamah: string,
-        public readonly comingUp: boolean = false
-    ) {}
-
-    getSalahEnglish() : string
-    {
-        switch(this.salah)
-        {
-            case SalahType.Fajr:
-                return "Fajr";
-            case SalahType.Dhuhur:
-                return "Dhuhur";
-            case SalahType.Asr:
-                return "Asr";
-            case SalahType.Mughrib:
-                return "Mughrib";
-            case SalahType.Isha:
-                return "Isha";
-            default:
-                return "";
-        }
-    }
-
-    getSalahArabic() : string
-    {
-        switch(this.salah)
-        {
-            case SalahType.Fajr:
-                return "فجر";
-            case SalahType.Dhuhur:
-                return "ظهر";
-            case SalahType.Asr:
-                return "عصر";
-            case SalahType.Mughrib:
-                return "مغرب";
-            case SalahType.Isha:
-                return "عشاء";
-            default:
-                return "";
-        }
-    }
-}
-
-export default function PrayersTimetable()
+export default function DailyTimetable()
 {
     const prayers =
         [
@@ -81,11 +28,9 @@ export default function PrayersTimetable()
                             <h4 className="text-md font-light md:text-xl">{formatToHijriDate(today)}</h4>
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
-                            <Button>
-                                <Link href="/timetable">
-                                    <h1 className="text-sm md:text-lg">Full Timetable</h1>
-                                </Link>
-                            </Button>
+                            <LinkButton href="/timetable">
+                                <h1 className="text-sm md:text-lg">Full Timetable</h1>
+                            </LinkButton>
                         </div>
                     </div>
                     <div className="bg-gray-50 py-2">
@@ -119,48 +64,4 @@ export default function PrayersTimetable()
             </Button>
         </Link>
     </section>;
-}
-
-function formatToHijriDate(date) {
-    const options = {
-        timeZone: 'UTC',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    };
-    return date.toLocaleDateString('en-SA-u-ca-islamic-umalqura', options);
-}
-
-function formatDateWithSuffix(date) {
-    const options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    };
-
-    // @ts-ignore
-    const formatter = new Intl.DateTimeFormat('en-UK', options);
-    let formattedDate = formatter.format(date);
-
-    const day = date.getDate();
-    const ordinalSuffix = getOrdinalSuffix(day);
-
-    return formattedDate.replace(/\d+/, (match) => match + ordinalSuffix);
-}
-
-function getOrdinalSuffix(day) {
-    if (day >= 11 && day <= 13) {
-        return 'th';
-    }
-    switch (day % 10) {
-        case 1:
-            return 'st';
-        case 2:
-            return 'nd';
-        case 3:
-            return 'rd';
-        default:
-            return 'th';
-    }
 }

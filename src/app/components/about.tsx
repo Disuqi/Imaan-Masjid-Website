@@ -1,6 +1,6 @@
 import React from "react";
-import Link from "next/link";
-import {AspectRatio, Button} from "@mui/joy";
+import {AspectRatio} from "@mui/joy";
+import LinkButton from "@/app/components/buttons/linkButton";
 
 export default function About()
 {
@@ -19,11 +19,7 @@ export default function About()
                     <h1 className="text-2xl xl:text-4xl font-bold">About Imaan Masjid</h1>
                     <p className="text-lg xl:text-xl">The Imaan Masjid as an organisation runs a Masjid, Madrassah and Community Centre in Bolton – aiming to enrich the local and wider communities with the pure knowledge of the Quran and Sunnah as understood by the companions and righteous predecessors.</p>
                     <div className="my-4">
-                        <Button variant="solid" size="lg">
-                        <Link href="/events">
-                            Events
-                        </Link>
-                        </Button>
+                        <LinkButton href="/events"><h2 className="text-lg">Events</h2></LinkButton>
                     </div>
                 </div>
             </div>
