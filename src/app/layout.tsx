@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'Imaan Masjid',
-    icons: { icon: "favicon.svg"},
+    icons: { icon: "./favicon.svg"},
 }
 
 export default function RootLayout({
@@ -20,7 +20,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body id="rootEl" className={inter.className + " min-h-screen"}>
         <Header/>
-        {children}
+        <div className="relative">
+            {children}
+        </div>
         <Footer/>
       </body>
     </html>

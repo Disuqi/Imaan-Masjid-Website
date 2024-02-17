@@ -59,3 +59,17 @@ export function getOrdinalSuffix(day) {
             return 'th';
     }
 }
+
+export function dateToSupabaseDate(date: Date) : string
+{
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding 1 to month since months are zero-based
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return `${year}-${month}-${day}`;
+}
+
+export function formatSupabaseTime(supabaseTime: string) : string
+{
+    return supabaseTime.substring(0, 5);
+}

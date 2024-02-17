@@ -1,29 +1,30 @@
+import {formatSupabaseTime} from "@/app/components/utils/date";
+
+export class DailyPrayers
+{
+    constructor(
+        public readonly date: string,
+        public readonly hijri: number,
+        public readonly fajr_adhan: string,
+        public readonly fajr_iqama: string,
+        public readonly sunrise: string,
+        public readonly dhuhr_adhan: string,
+        public readonly dhuhr_iqama: string,
+        public readonly asr_adhan: string,
+        public readonly asr_iqama: string,
+        public readonly mughrib_adhan: string,
+        public readonly isha_adhan: string,
+        public readonly isha_iqama: string
+    ) {}
+}
+
 export enum SalahType
 {
     Fajr,
-    Dhuhur,
+    Dhuhr,
     Asr,
     Mughrib,
     Isha
-}
-
-export class SalahTime {
-    constructor(
-        public readonly salah : SalahType,
-        public readonly adhan: string,
-        public readonly iqamah: string,
-        public readonly comingUp: boolean = false
-    ) {}
-
-    getSalahEnglish() : string
-    {
-        return SalahToEnglish(this.salah);
-    }
-
-    getSalahArabic() : string
-    {
-        return SalahToArabic(this.salah);
-    }
 }
 
 export function SalahToEnglish(salah: SalahType) : string
@@ -32,8 +33,8 @@ export function SalahToEnglish(salah: SalahType) : string
     {
         case SalahType.Fajr:
             return "Fajr";
-        case SalahType.Dhuhur:
-            return "Dhuhur";
+        case SalahType.Dhuhr:
+            return "Dhuhr";
         case SalahType.Asr:
             return "'Asr";
         case SalahType.Mughrib:
@@ -51,7 +52,7 @@ export function SalahToArabic(salah: SalahType) : string
     {
         case SalahType.Fajr:
             return "فجر";
-        case SalahType.Dhuhur:
+        case SalahType.Dhuhr:
             return "ظهر";
         case SalahType.Asr:
             return "عصر";

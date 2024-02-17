@@ -1,23 +1,20 @@
-import React from "react";
 import Link from "next/link";
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
-import {SalahTime, SalahType} from "./utils/salah";
 import LinkButton from "@/app/components/buttons/linkButton";
-import {formatDateWithSuffix, formatToHijriDate} from "@/app/components/utils/date";
+import {
+    dateToSupabaseDate,
+    formatDateWithSuffix,
+    formatSupabaseTime,
+    formatToHijriDate
+} from "@/app/components/utils/date";
+import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
+import supabase from "@/lib/supabase";
 
-export default function DailyTimetable()
+export default async function DailyTimetable()
 {
-    const prayers =
-        [
-            new SalahTime(SalahType.Fajr, "7:00", "7:00"),
-            new SalahTime(SalahType.Dhuhur, "7:00", "7:00"),
-            new SalahTime(SalahType.Asr, "7:00", "7:00"),
-            new SalahTime(SalahType.Mughrib, "7:00", "7:00", true),
-            new SalahTime(SalahType.Isha, "7:00", "7:00"),
-        ];
-
     const today = new Date();
+    const dailyPrayers = (await supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>()).data;
     return <section className="h-[92vh] flex flex-col justify-between">
         <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
@@ -34,26 +31,58 @@ export default function DailyTimetable()
                         </div>
                     </div>
                     <div className="bg-gray-50 py-2">
-                        <table className="text-lg md:text-2xl">
-                            <thead className="text-gray-300">
-                                <tr role="rowheader">
-                                    <th className="w-[15%] font-semibold pl-4 text-start" role="columnheader">صلاة</th>
-                                    <th className="w-[15%] font-semibold text-start" role="columnheader">Salah</th>
-                                    <th className="w-[100%] font-semibold px-4 text-end" role="columnheader">Adhan</th>
-                                    <th className="w-[100%] font-semibold pr-4 text-end" role="columnheader">Iqamah</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-md md:text-xl">
-                            {prayers.map((prayer) =>
-                                // eslint-disable-next-line react/jsx-key
-                                <tr className={prayer.comingUp? "bg-blue-100 px-4" : "px-4"}>
-                                    <th className="pl-4 font-light text-start">{prayer.getSalahArabic()}</th>
-                                    <th className="font-light text-start">{prayer.getSalahEnglish()}</th>
-                                    <th className="font-light px-4 text-end">{prayer.adhan}</th>
-                                    <th className="pr-4 font-light text-end">{prayer.iqamah}</th>
-                                </tr>)}
-                            </tbody>
-                        </table>
+                        {
+                            dailyPrayers ?
+                                <table className="text-lg md:text-2xl">
+                                    <thead className="text-gray-300">
+                                    <tr role="rowheader">
+                                        <th className="w-[15%] font-semibold pl-4 text-start" role="columnheader">صلاة
+                                        </th>
+                                        <th className="w-[15%] font-semibold text-start" role="columnheader">Salah</th>
+                                        <th className="w-[100%] font-semibold px-4 text-end" role="columnheader">Adhan
+                                        </th>
+                                        <th className="w-[100%] font-semibold pr-4 text-end"
+                                            role="columnheader">Iqamah
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody className="text-md md:text-xl">
+                                    <tr>
+                                        <td className="pl-4 font-light text-start">{SalahToArabic(SalahType.Fajr)}</td>
+                                        <td className="font-light text-start">{SalahToEnglish(SalahType.Fajr)}</td>
+                                        <td className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.fajr_adhan)}</td>
+                                        <td className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.fajr_iqama)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Dhuhr)}</th>
+                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Dhuhr)}</th>
+                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.dhuhr_adhan)}</th>
+                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.dhuhr_iqama)}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Asr)}</th>
+                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Asr)}</th>
+                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.asr_adhan)}</th>
+                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.asr_iqama)}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Mughrib)}</th>
+                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Mughrib)}</th>
+                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.mughrib_adhan)}</th>
+                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.mughrib_adhan)}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Isha)}</th>
+                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Isha)}</th>
+                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.isha_adhan)}</th>
+                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.isha_iqama)}</th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                :
+                                <>
+                                </>
+                        }
                     </div>
                 </div>
             </div>

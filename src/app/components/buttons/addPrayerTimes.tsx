@@ -1,9 +1,9 @@
 "use client"
-import React, {useState} from "react";
-import AddEventForm from "@/app/components/forms/addEvent";
+import {useState} from "react";
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
 import LoadingAnimation from "@/app/components/utils/loading";
 import {Size} from "@/app/components/utils/size";
+import AddPrayerTimesForm from "@/app/components/forms/addPrayerTimes";
 
 export default function AddEventBtn()
 {
@@ -14,7 +14,7 @@ export default function AddEventBtn()
     {
         if (!loading)
             setModalState(false);
-    }
+    };
 
     return <>
         <Button size="lg" onClick={() => setModalState(true)}>
@@ -22,11 +22,11 @@ export default function AddEventBtn()
         </Button>
         <Modal open={modalState} onClose={closeModal}>
             <ModalDialog>
-                <LoadingAnimation state={loading} text="Uploading Image" size={Size.M}/>
+                <LoadingAnimation state={loading} text="Uploading" size={Size.M}/>
                 <ModalClose/>
-                <DialogTitle>Add Event</DialogTitle>
+                <DialogTitle>Add Prayer Times</DialogTitle>
                 <DialogContent>
-                    <AddEventForm onStart={() => setLoading(true)} onComplete={() => { setModalState(false); setLoading(false); }}/>
+                    <AddPrayerTimesForm onStart={() => setLoading(true)} onComplete={() => { setModalState(false); setLoading(false); }}/>
                 </DialogContent>
             </ModalDialog>
         </Modal>
