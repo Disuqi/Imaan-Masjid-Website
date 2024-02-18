@@ -3,7 +3,6 @@ import {FormEvent, useEffect, useState} from "react";
 import SignInForm from "@/app/components/forms/admin_signin";
 import toast, {Toaster} from "react-hot-toast";
 import AddEventBtn from "@/app/components/buttons/addEvent";
-import EditEventBtn from "@/app/components/buttons/editEvent";
 import RemoveEventBtn from "@/app/components/buttons/removeEvent";
 import supabase from "@/lib/supabase";
 import {Button} from "@mui/joy";
@@ -83,7 +82,7 @@ export default function Page()
                                     <RemovePrayerTimesBtn/>
                                 </div>
                             </div>
-                            <Button color="danger" size="lg" onClick={signOutAdmin}>
+                            <Button component="div" color="danger" size="lg" onClick={signOutAdmin}>
                                 Sign Out
                             </Button>
                         </div>

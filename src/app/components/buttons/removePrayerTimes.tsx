@@ -67,7 +67,7 @@ export default function RemovePrayerTimesBtn()
         setSelectedMonth(parseInt(newValue));
     };
     return <>
-        <Button size="lg" onClick={openModal}>Remove</Button>
+        <Button component="div" size="lg" onClick={openModal}>Remove</Button>
         <Modal open={modalState} onClose={() => setModalState(false)}>
             <ModalDialog>
                 <LoadingAnimation state={loading} size={Size.M}/>

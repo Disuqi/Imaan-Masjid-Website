@@ -1,13 +1,10 @@
 import {Button} from "@mui/joy";
 import Link from "next/link";
+import LinkButton from "@/app/components/buttons/linkButton";
 
 export default function RemoveEventBtn()
 {
     return <>
-        <Link href="/events">
-            <Button size="lg">
-                Remove
-            </Button>
-        </Link>
+        <LinkButton size="lg" href={"/events"}>Remove</LinkButton>
     </>
 }

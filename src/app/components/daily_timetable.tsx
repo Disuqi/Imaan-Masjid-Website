@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
@@ -10,11 +11,18 @@ import {
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
+import {useState} from "react";
 
-export default async function DailyTimetable()
+export default function DailyTimetable()
 {
+    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>();
     const today = new Date();
-    const dailyPrayers = (await supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>()).data;
+    supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((response) =>
+    {
+        if(response.error != null)
+            return;
+        setDailyPrayers(response.data);
+    });
     return <section className="h-[92vh] flex flex-col justify-between">
         <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
@@ -26,7 +34,7 @@ export default async function DailyTimetable()
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
                             <LinkButton href="/timetable">
-                                <h1 className="text-sm md:text-lg">Full Timetable</h1>
+                                <h1 className="text-nowrap whitespace-nowrap text-center text-sm md:text-lg">Full Timetable</h1>
                             </LinkButton>
                         </div>
                     </div>

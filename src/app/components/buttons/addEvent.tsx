@@ -17,7 +17,7 @@ export default function AddEventBtn()
     }
 
     return <>
-        <Button size="lg" onClick={() => setModalState(true)}>
+        <Button component="div" size="lg" onClick={() => setModalState(true)}>
             Add
         </Button>
         <Modal open={modalState} onClose={closeModal}>
