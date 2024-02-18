@@ -13,6 +13,7 @@ import {DefaultMessage} from "@/app/components/defaultMessage";
 export default function Page() {
     const [events, setEvents] = React.useState<Event[]>(null);
     const [adminSignedIn, setAdminSignedIn] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
         supabase.from("Event").select("*").returns<Event[]>().then((response) =>
@@ -24,6 +25,7 @@ export default function Page() {
                     event.imageUrl = getEventImageUrl(event);
             });
             setEvents(response.data ?? []);
+            setLoading(false);
         });
         supabase.auth.getUser().then((response) =>
         {
@@ -56,6 +58,7 @@ export default function Page() {
     supabase.storage.from("event_images").getPublicUrl("test.jpg");
     return <>
         <div className="container mx-auto min-h-[54.65vh] w-full">
+            <LoadingAnimation state={loading}/>
             {
                 events?.length > 0 ?
                     <div className="flex flex-col justify-start items-center">

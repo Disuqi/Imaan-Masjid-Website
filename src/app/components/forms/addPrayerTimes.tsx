@@ -1,37 +1,46 @@
 "use client"
 import {Button} from "@mui/joy";
-import {FormEvent} from "react";
+import {FormEvent, useState} from "react";
 import toast from "react-hot-toast";
 import {DailyPrayers} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
 import {dateToSupabaseDate} from "@/app/components/utils/date";
+import LoadingAnimation from "@/app/components/utils/loading";
 
 export default function AddPrayerTimesForm(props: {onStart: () => void, onComplete: () => void})
 {
-    const onSubmit = async (formEvent: FormEvent) =>
+    const [prayersFile, setPrayersFile] = useState(null);
+
+    const handleInputChange = (e) =>
+    {
+        const file = e.target.files[0];
+        if(file)
+        {
+            setPrayersFile(file);
+        }
+    }
+
+    const onSubmit = async () =>
     {
         props.onStart();
-        formEvent.preventDefault();
-        //@ts-ignore
-        const formData = new FormData(formEvent.target);
-        await addDailyPrayer(formData);
+        await addDailyPrayer(prayersFile);
         props.onComplete();
     }
 
     return <div className="flex flex-col justify-center items-center">
-        <form className="flex flex-col gap-2 justify-center items-start" onSubmit={onSubmit}>
+        <div className="flex flex-col gap-2 justify-center items-start">
             <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="prayer_times_file">Upload CSV file</label>
-            <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="prayer_times_file" type="file" accept="text/csv" name="prayer_times_file"/>
+            <input onChange={handleInputChange} className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="prayer_times_file" type="file" accept="text/csv" name="prayer_times_file"/>
             <div className="text-center w-full mt-2">
-                <Button type="submit">Submit</Button>
+                <Button component="div" onClick={onSubmit}>Submit</Button>
             </div>
-        </form>
+        </div>
     </div>
 }
 
-async function addDailyPrayer(formData : FormData) : Promise<void>
+async function addDailyPrayer(prayersFile) : Promise<void>
 {
-    const file = formData.get("prayer_times_file") as File;
+    const file = prayersFile as File;
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = async (e) =>

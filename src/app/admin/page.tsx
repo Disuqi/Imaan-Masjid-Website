@@ -65,7 +65,7 @@ export default function Page()
 
     return <>
         <div className="w-full h-[54.65vh] flex justify-center items-center">
-            <LoadingAnimation state={loading} size={Size.XL}/>
+            <LoadingAnimation state={loading} size={Size.L}/>
             {adminSignedIn ?
                     <>
                         <div className="flex flex-col justify-center items-center gap-6">

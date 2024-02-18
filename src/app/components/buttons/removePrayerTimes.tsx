@@ -82,7 +82,7 @@ export default function RemovePrayerTimesBtn()
                             }
                         </Select>
                     </div>
-                    <Button className="ml-auto" color="danger" onClick={removePrayerTimes}>Remove</Button>
+                    <Button component="div" className="ml-auto" color="danger" onClick={removePrayerTimes}>Remove</Button>
                 </DialogContent>
             </ModalDialog>
         </Modal>

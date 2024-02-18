@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 
 export default function AddEventForm(props: {onStart: () => void, onComplete: () => void})
 {
-    const [image, setImage]= useState(null);
+    const [image, setImage] = useState(null);
+    const [formData, setFormData] = useState({});
 
     const imageUpload = (e) =>
     {
@@ -18,20 +19,25 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
         }
+        setFormData({...formData, "image": file})
     };
 
-    const onSubmit = async (formEvent: FormEvent) =>
+    const onSubmit = async () =>
     {
         props.onStart();
-        formEvent.preventDefault();
         //@ts-ignore
-        const formData = new FormData(formEvent.target);
         await addEvent(formData);
         props.onComplete();
     };
 
+    const handleInputChange = (e) =>
+    {
+        if (e.target.name == "image")
+            return;
+        setFormData({...formData, [e.target.name]: e.target.value});
+    }
     return <div className="flex flex-col justify-center items-center">
-        <form className="flex flex-col gap-2 justify-center items-start" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-2 justify-center items-start" onChange={handleInputChange}>
             <div className="flex flex-col">
                 <label className="text-sm text-gray-300">Image</label>
                 <label className="md:w-96 md:h-52 w-72 h-40 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200 transition duration-100 ease-out cursor-pointer" htmlFor="eventImageFileInput">
@@ -60,7 +66,7 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
                 <input className="p-1 text-sm border border-gray-200 rounded" type="time" name="time"/>
             </div>
             <div className="text-center w-full mt-2">
-                <Button type="submit">Submit</Button>
+                <Button component="div" onClick={onSubmit}>Submit</Button>
             </div>
         </form>
     </div>
@@ -69,12 +75,11 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
 
 async function addEvent(formData)
 {
-    const title : string = formData.get("title") as string;
-    const description : string = formData.get("description") as string;
-    const dateString : string = formData.get("date") as string;
-    const timeString : string = formData.get("time") as string;
-    const image : File = formData.get("image") as File;
-
+    const title : string = formData["title"] as string;
+    const description : string = formData["description"] as string;
+    const dateString : string = formData["date"] as string;
+    const timeString : string = formData["time"] as string;
+    const image : File = formData["image"] as File;
 
     let dateTimeString: string = `${dateString}`;
     if(timeString != null && timeString != "")

@@ -17,24 +17,20 @@ export default function LoadingAnimation(props: {state: boolean, text?: string, 
             animationSize = "w-8 h-8";
             break;
         case Size.M:
-            textSize = "text-2xl";
+            textSize = "text-xl";
             animationSize = "w-12 h-12";
             break;
         case Size.L:
-            textSize = "text-3xl";
+            textSize = "text-2xl";
             animationSize = "w-24 h-24";
             break;
         case Size.XL:
-            textSize = "text-4xl";
+            textSize = "text-3xl";
             animationSize = "w-32 h-32";
             break;
         case Size.XXL:
-            textSize = "text-5xl";
+            textSize = "text-4xl";
             animationSize = "w-48 h-48";
-            break;
-        case Size.FULL:
-            textSize = "text-5xl";
-            animationSize = "w-full h-full";
             break;
         default:
             textSize = "text-xl";
