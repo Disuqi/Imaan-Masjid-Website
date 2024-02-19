@@ -1,21 +1,20 @@
 
 export function formatToHijriDate(date) {
     const options = {
-        timeZone: 'UTC',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
     };
-    return date.toLocaleDateString('en-SA-u-ca-islamic-umalqura', options);
+    return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
 }
 
 export function getHijriMonth(date)
 {
-    const options = {
-        timeZone: 'UTC',
+    const options =
+    {
         month: 'long',
     };
-    return date.toLocaleDateString('en-SA-u-ca-islamic-umalqura', options);
+    return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
 }
 
 export function formatDateWithSuffix(date) {
