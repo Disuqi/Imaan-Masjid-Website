@@ -16,37 +16,12 @@ export default function Page()
     const [adminSignedIn, setAdminSignedIn] = useState(null);
     const loading = adminSignedIn == null;
 
-    const signInAdmin = () =>
-    {
-        setAdminSignedIn(true);
-        toast.success("Signed in as admin");
-    }
     const signOutAdmin = async () =>
     {
         await supabase.auth.signOut();
         setAdminSignedIn(false);
         toast("Signed out");
     }
-
-    const checkCredentials = async (event: FormEvent) =>
-    {
-        event.preventDefault();
-        const formData = new FormData(event.target as HTMLFormElement);
-        const email : string = formData.get("email") as string;
-        const password : string = formData.get("password") as string;
-
-        supabase.auth.signInWithPassword({email, password}).then((response) =>
-        {
-            if(response.data.user != null)
-            {
-                signInAdmin();
-            }
-            if(response.error != null)
-            {
-                toast.error("Incorrect credentials");
-            }
-        });
-    };
 
     useEffect(() =>
     {
@@ -88,7 +63,7 @@ export default function Page()
                         </div>
                     </>
                     :
-                    <SignInForm onSubmit={checkCredentials}/>
+                    <SignInForm onSuccessfullSignIn={() => setAdminSignedIn(true)}/>
             }
         </div>
         <Toaster position="top-center"/>
