@@ -1,4 +1,3 @@
-"use client"
 import Link from "next/link";
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
@@ -11,18 +10,16 @@ import {
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
-import {useState} from "react";
 
-export default function DailyTimetable()
+export default async function DailyTimetable()
 {
-    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>();
     const today = new Date();
-    supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((response) =>
+    const response = await supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>();
+    let dailyPrayers = null;
+    if(response.error == null)
     {
-        if(response.error != null)
-            return;
-        setDailyPrayers(response.data);
-    });
+        dailyPrayers = response.data;
+    }
     return <section className="h-[92vh] flex flex-col justify-between">
         <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
