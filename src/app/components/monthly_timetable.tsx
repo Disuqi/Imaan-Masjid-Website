@@ -1,11 +1,16 @@
+"use client"
 import {Sheet, Table} from "@mui/joy";
 import {dateToSupabaseDate, formatSupabaseTime, getHijriMonth, getMonth} from "@/app/components/utils/date";
 import {DailyPrayers, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
 import {DefaultMessage} from "@/app/components/defaultMessage";
+import {useState} from "react";
+import LoadingAnimation from "@/app/components/utils/loading";
 
-export default async function MonthlyTimetable()
+export default function MonthlyTimetable()
 {
+    const [loading, setLoading] = useState(true);
+    const [prayers, setPrayers] = useState<DailyPrayers[]>([]);
     const firstDate = new Date();
     firstDate.setDate(1);
     const lastDate = new Date(firstDate);
@@ -15,19 +20,21 @@ export default async function MonthlyTimetable()
     const hijriFirstMonth = getHijriMonth(firstDate);
     const hijriLastMonth = getHijriMonth(lastDate);
 
-    const result = await supabase.from("DailyPrayers")
+    supabase.from("DailyPrayers")
         .select("*")
         .gte("date", dateToSupabaseDate(firstDate))
         .lte("date", dateToSupabaseDate(lastDate))
-        .returns<DailyPrayers[]>();
-
-    let prayers = [];
-    if(result.error == null)
+        .returns<DailyPrayers[]>().then((result) =>
     {
-        prayers = result.data;
-    }
+        if(result.error == null)
+        {
+            setPrayers(result.data);
+        }
+        setLoading(false);
+    });
 
     return <div className="mx-auto container m-5 max-w-vw">
+            <LoadingAnimation state={loading}/>
             {
                 prayers.length > 0 ?
                     <>

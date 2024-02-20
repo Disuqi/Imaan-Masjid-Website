@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
@@ -10,21 +11,25 @@ import {
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
+import {useState} from "react";
 
-export default async function DailyTimetable()
+export default function DailyTimetable()
 {
+    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>(null);
     const today = new Date();
-    const response = await supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>();
-    let dailyPrayers = null;
-    if(response.error == null)
+    supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((result) =>
     {
-        dailyPrayers = response.data;
-    }
+        if(result.error == null)
+        {
+            setDailyPrayers(result.data);
+        }
+    });
+
     return <section className="h-[92vh] flex flex-col justify-between">
         <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
-                <div className="border border-gray-200 bg-white m-5">
-                    <div className="p-6 flex flex-row justify-between gap-5 md:gap-20">
+                <div className="m-5">
+                    <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
                             <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
                             <h4 className="text-md font-light md:text-xl">{formatToHijriDate(today)}</h4>
@@ -35,7 +40,7 @@ export default async function DailyTimetable()
                             </LinkButton>
                         </div>
                     </div>
-                    <div className="bg-gray-50 py-2">
+                    <div className="rounded-b-md bg-gray-50 py-2">
                         {
                             dailyPrayers ?
                                 <table className="text-lg md:text-2xl">
