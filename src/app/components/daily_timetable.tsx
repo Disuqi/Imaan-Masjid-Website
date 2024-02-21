@@ -7,23 +7,28 @@ import {
     dateToSupabaseDate,
     formatDateWithSuffix,
     formatSupabaseTime,
-    formatToHijriDate
+    apiFormattedHijriDate
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function DailyTimetable()
 {
     const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>(null);
     const today = new Date();
-    supabase.from("DailyPrayers").select("*").eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((result) =>
+    const [hijriDate, setHijriDate] = useState<string>("");
+
+    useEffect(() =>
     {
-        if(result.error == null)
+        const today = new Date();
+        supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((result) =>
         {
-            setDailyPrayers(result.data);
-        }
-    });
+            if(result.error == null)
+                setDailyPrayers(result.data);
+        });
+        apiFormattedHijriDate(today).then((result) => setHijriDate(result));
+    }, []);
 
     return <section className="h-[92vh] flex flex-col justify-between">
         <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
@@ -32,7 +37,7 @@ export default function DailyTimetable()
                     <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
                             <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
-                            <h4 className="text-md font-light md:text-xl">{formatToHijriDate(today)}</h4>
+                            {hijriDate && <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>}
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
                             <LinkButton href="/timetable">

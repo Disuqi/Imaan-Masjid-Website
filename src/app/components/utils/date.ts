@@ -1,23 +1,41 @@
+import {format} from "date-fns";
 
-export function formatToHijriDate(date) {
+export async function apiFormattedHijriDate(date: Date): Promise<string>
+{
+    const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`);
+    const data = (await response.json()).data;
+    console.log("Here");
+    return data.hijri.day + " " + data.hijri.month.en + " " + data.hijri.year + " " + data.hijri.designation.abbreviated;
+}
+
+export async function apiHijriMonth(date: Date)
+{
+    const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`);
+    const data = (await response.json()).data;
+    return data.hijri.month.en;
+}
+
+export function formatToHijriDate(date: Date) {
     const options = {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
     };
+    // @ts-ignore
     return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
 }
 
-export function getHijriMonth(date)
+export function getHijriMonth(date: Date)
 {
     const options =
     {
         month: 'long',
     };
+    // @ts-ignore
     return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
 }
 
-export function formatDateWithSuffix(date) {
+export function formatDateWithSuffix(date: Date) {
     const options = {
         weekday: 'long',
         day: 'numeric',
@@ -35,11 +53,12 @@ export function formatDateWithSuffix(date) {
     return formattedDate.replace(/\d+/, (match) => match + ordinalSuffix);
 }
 
-export function getMonth(date)
+export function getMonth(date: Date)
 {
     const options = {
         month: 'long',
     };
+    // @ts-ignore
     return date.toLocaleDateString('en-UK', options);
 }
 
