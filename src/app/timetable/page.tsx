@@ -15,13 +15,14 @@ import LoadingAnimation from "@/app/components/utils/loading";
 export default function Page()
 {
     const [loading, setLoading] = useState(true);
-    const [today, setToday] = useState(new Date());
     const [prayers, setPrayers] = useState<DailyPrayers[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
+    const today = new Date();
 
     useEffect(() =>
     {
+        setLoading(true);
         const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
         const lastDate = new Date(firstDate);
 
@@ -39,10 +40,10 @@ export default function Page()
                 setPrayers(result.data);
             }
         });
-        setLoading(false);
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
-    }, [])
+        setLoading(false);
+    }, []);
 
     return <div className="mx-auto container m-5 max-w-vw">
         <LoadingAnimation state={loading}/>
