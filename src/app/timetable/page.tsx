@@ -22,7 +22,6 @@ export default function Page()
 
     useEffect(() =>
     {
-        setToday(new Date());
         const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
         const lastDate = new Date(firstDate);
 
@@ -43,7 +42,7 @@ export default function Page()
         setLoading(false);
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
-    }, [today])
+    }, [])
 
     return <div className="mx-auto container m-5 max-w-vw">
         <LoadingAnimation state={loading}/>
