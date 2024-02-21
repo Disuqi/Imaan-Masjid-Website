@@ -4,7 +4,6 @@ import {
     apiHijriMonth,
     dateToSupabaseDate,
     formatSupabaseTime,
-    getHijriMonth,
     getMonth
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
@@ -16,19 +15,20 @@ import LoadingAnimation from "@/app/components/utils/loading";
 export default function Page()
 {
     const [loading, setLoading] = useState(true);
+    const [today, setToday] = useState(new Date());
     const [prayers, setPrayers] = useState<DailyPrayers[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
 
-    const today = new Date();
-    const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDate = new Date(firstDate);
-
-    lastDate.setMonth(lastDate.getMonth() + 1);
-    lastDate.setDate(lastDate.getDate() - 1);
-
     useEffect(() =>
     {
+        setToday(new Date());
+        const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDate = new Date(firstDate);
+
+        lastDate.setMonth(lastDate.getMonth() + 1);
+        lastDate.setDate(lastDate.getDate() - 1);
+
         supabase.from("DailyPrayers")
             .select("*")
             .gte("date", dateToSupabaseDate(firstDate))
@@ -43,7 +43,7 @@ export default function Page()
         setLoading(false);
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
-    }, [firstDate, lastDate])
+    }, [today])
 
     return <div className="mx-auto container m-5 max-w-vw">
         <LoadingAnimation state={loading}/>
@@ -52,7 +52,7 @@ export default function Page()
                 <>
                     <div className="flex flex-col justify-center items-center md:items-start">
 
-                        <h1 className="text-3xl font-bold">{getMonth(firstDate)} Timetable</h1>
+                        <h1 className="text-3xl font-bold">{getMonth(today)} Timetable</h1>
                         {firstHijriMonth && lastHijriMonth &&
                             <h1 className="text-3xl font-bold text-gray-300">{firstHijriMonth}/{lastHijriMonth}</h1>}
                     </div>

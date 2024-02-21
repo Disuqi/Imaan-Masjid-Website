@@ -4,7 +4,6 @@ export async function apiFormattedHijriDate(date: Date): Promise<string>
 {
     const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`);
     const data = (await response.json()).data;
-    console.log("Here");
     return data.hijri.day + " " + data.hijri.month.en + " " + data.hijri.year + " " + data.hijri.designation.abbreviated;
 }
 
