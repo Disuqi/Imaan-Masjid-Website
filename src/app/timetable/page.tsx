@@ -11,9 +11,11 @@ import {DailyPrayers, SalahToEnglish, SalahType} from "@/app/components/utils/sa
 import {Sheet, Table} from "@mui/joy";
 import {DefaultMessage} from "@/app/components/defaultMessage";
 import {useEffect, useState} from "react";
+import LoadingAnimation from "@/app/components/utils/loading";
 
 export default function Page()
 {
+    const [loading, setLoading] = useState(true);
     const [prayers, setPrayers] = useState<DailyPrayers[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
@@ -38,12 +40,13 @@ export default function Page()
                 setPrayers(result.data);
             }
         });
-
+        setLoading(false);
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
     }, [firstDate, lastDate])
 
     return <div className="mx-auto container m-5 max-w-vw">
+        <LoadingAnimation state={loading}/>
         {
             prayers.length > 0 ?
                 <>
