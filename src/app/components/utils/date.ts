@@ -14,26 +14,6 @@ export async function apiHijriMonth(date: Date)
     return data.hijri.month.en;
 }
 
-export function formatToHijriDate(date: Date) {
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    };
-    // @ts-ignore
-    return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
-}
-
-export function getHijriMonth(date: Date)
-{
-    const options =
-    {
-        month: 'long',
-    };
-    // @ts-ignore
-    return date.toLocaleDateString('en-GB-u-ca-islamic-umalqura', options);
-}
-
 export function formatDateWithSuffix(date: Date) {
     const options = {
         weekday: 'long',
@@ -89,4 +69,16 @@ export function dateToSupabaseDate(date: Date) : string
 export function formatSupabaseTime(supabaseTime: string) : string
 {
     return supabaseTime.substring(0, 5);
+}
+
+export function getUkTime(date: Date) : string
+{
+    const options : Intl.DateTimeFormatOptions =
+        {
+            timeZone: "Europe/London",
+            hour12: true,
+            hour: "numeric",
+            minute: "numeric",
+        }
+    return date.toLocaleString("en-GB", options);
 }

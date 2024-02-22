@@ -20,11 +20,11 @@ export class DailyPrayers
 
 export enum SalahType
 {
-    Fajr,
-    Dhuhr,
-    Asr,
-    Mughrib,
-    Isha
+    Fajr= "fajr",
+    Dhuhr = "dhuhr",
+    Asr = "asr",
+    Mughrib = "mughrib",
+    Isha = "isha"
 }
 
 export function SalahToEnglish(salah: SalahType) : string

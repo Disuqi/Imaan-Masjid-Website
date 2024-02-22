@@ -4,10 +4,11 @@ import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
 import LinkButton from "@/app/components/buttons/linkButton";
 import {
+    apiFormattedHijriDate,
     dateToSupabaseDate,
     formatDateWithSuffix,
     formatSupabaseTime,
-    apiFormattedHijriDate
+    getUkTime
 } from "@/app/components/utils/date";
 import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
 import supabase from "@/lib/supabase";
@@ -16,16 +17,34 @@ import {useEffect, useState} from "react";
 export default function DailyTimetable()
 {
     const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>(null);
-    const today = new Date();
     const [hijriDate, setHijriDate] = useState<string>("");
+    const [highlightedSalah, setHighlightedSalah] = useState<SalahType>(SalahType.Fajr);
+
+    const today = new Date();
 
     useEffect(() =>
     {
-        const today = new Date();
-        supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then((result) =>
+        supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then(async (result) =>
         {
-            if(result.error == null)
-                setDailyPrayers(result.data);
+
+            if(result.error != null || result.data == null)
+                return;
+
+            let loadedDailyPrayers = result.data;
+            const upcomingSalah = getUpcomingSalah(today, loadedDailyPrayers);
+
+            if(ishaIqamaHasPassed(today, loadedDailyPrayers.isha_iqama))
+            {
+                let tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const secondResult = await supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(tomorrow)).single<DailyPrayers>();
+                if(secondResult.error != null || secondResult.data == null)
+                    return;
+                loadedDailyPrayers = secondResult.data;
+            }
+
+            setDailyPrayers(loadedDailyPrayers);
+            setHighlightedSalah(upcomingSalah);
         });
         apiFormattedHijriDate(today).then((result) => setHijriDate(result));
     }, []);
@@ -62,36 +81,25 @@ export default function DailyTimetable()
                                     </tr>
                                     </thead>
                                     <tbody className="text-md md:text-xl">
-                                    <tr>
-                                        <td className="pl-4 font-light text-start">{SalahToArabic(SalahType.Fajr)}</td>
-                                        <td className="font-light text-start">{SalahToEnglish(SalahType.Fajr)}</td>
-                                        <td className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.fajr_adhan)}</td>
-                                        <td className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.fajr_iqama)}</td>
-                                    </tr>
-                                    <tr>
-                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Dhuhr)}</th>
-                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Dhuhr)}</th>
-                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.dhuhr_adhan)}</th>
-                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.dhuhr_iqama)}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Asr)}</th>
-                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Asr)}</th>
-                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.asr_adhan)}</th>
-                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.asr_iqama)}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Mughrib)}</th>
-                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Mughrib)}</th>
-                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.mughrib_adhan)}</th>
-                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.mughrib_adhan)}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="pl-4 font-light text-start">{SalahToArabic(SalahType.Isha)}</th>
-                                        <th className="font-light text-start">{SalahToEnglish(SalahType.Isha)}</th>
-                                        <th className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers.isha_adhan)}</th>
-                                        <th className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers.isha_iqama)}</th>
-                                    </tr>
+                                    {
+                                        Object.values(SalahType).map((salah) =>
+                                        {
+                                            let className = "";
+                                            if(salah == highlightedSalah)
+                                                className = "bg-blue-100";
+
+                                            return <tr key={salah} className={className}>
+                                                <td className="pl-4 font-light text-start">{SalahToArabic(salah)}</td>
+                                                <td className="font-light text-start">{SalahToEnglish(salah)}</td>
+                                                <td className="font-light px-4 text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
+                                                {salah == SalahType.Mughrib ?
+                                                    <td className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
+                                                    :
+                                                    <td className="pr-4 font-light text-end">{formatSupabaseTime(dailyPrayers[salah + "_iqama"])}</td>
+                                                }
+                                            </tr>
+                                        })
+                                    }
                                     </tbody>
                                 </table>
                                 :
@@ -108,4 +116,48 @@ export default function DailyTimetable()
             </Button>
         </Link>
     </section>;
+}
+
+function ishaIqamaHasPassed(currentDate: Date, ishaIqama: string) : boolean
+{
+    let ukTime = getUkTime(currentDate);
+    if (ukTime.includes("am"))
+        return false;
+    ukTime = ukTime.replace("pm", '');
+
+    const time1Date = new Date(`${currentDate.toDateString()} ${ukTime}`);
+    const time2Date = new Date(`${currentDate.toDateString()} ${ishaIqama}`);
+
+    return time1Date > time2Date;
+}
+
+function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : SalahType
+{
+    let upcomingSalah = SalahType.Fajr;
+    let ukTime = getUkTime(currentDate);
+    ukTime = ukTime.replace("am", "").replace("pm", "");
+
+    const ukTimeDate = new Date(`${currentDate.toDateString()} ${ukTime}`);
+
+    const fajrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.fajr_iqama}`);
+    if(ukTimeDate > fajrIqamaDate)
+        upcomingSalah = SalahType.Dhuhr;
+
+    const dhuhrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.dhuhr_iqama}`);
+    if(ukTimeDate > dhuhrIqamaDate)
+        upcomingSalah = SalahType.Asr;
+
+    const asrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.asr_iqama}`);
+    if(ukTimeDate > asrIqamaDate)
+        upcomingSalah = SalahType.Mughrib;
+
+    const mughribIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.mughrib_adhan}`);
+    if(ukTimeDate > mughribIqamaDate)
+        upcomingSalah = SalahType.Isha;
+
+    const ishaIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.isha_iqama}`);
+    if(ukTimeDate > ishaIqamaDate)
+        upcomingSalah = SalahType.Fajr;
+
+    return upcomingSalah;
 }
