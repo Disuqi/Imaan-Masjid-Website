@@ -1,3 +1,4 @@
+
 "use client"
 import Link from "next/link";
 import {ScreenSize} from "@/app/constants";
@@ -5,6 +6,7 @@ import {useEffect, useState} from "react";
 import {Button, Drawer} from "@mui/joy";
 import {LuMenu} from "react-icons/lu";
 import {widthToScreenSize} from "@/app/components/utils/screen";
+import supabase from "@/lib/supabase";
 
 export default function Header()
 {
@@ -19,6 +21,7 @@ export default function Header()
         ];
 
     const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize>(null);
+    const [adminSignedIn, setAdminSignedIn] = useState(false);
 
     useEffect(() => {
         const updateScreenSize = () =>
@@ -27,6 +30,29 @@ export default function Header()
         }
         window.addEventListener('resize', updateScreenSize);
         updateScreenSize();
+        supabase.auth.getUser().then((response) =>
+        {
+            if(response.data.user != null)
+            {
+                setAdminSignedIn(true);
+            }
+        });
+        supabase.auth.onAuthStateChange(async (event, session) =>
+        {
+            console.log("Called");
+            if(event == "SIGNED_OUT")
+            {
+                setAdminSignedIn(false);
+            }else
+            {
+                const getUserResponse = await supabase.auth.getUser();
+                if(getUserResponse.data.user != null)
+                {
+                    setAdminSignedIn(true);
+                }
+            }
+        });
+
         // Remove the event listener when the component unmounts
         return () => {
             window.removeEventListener('resize', updateScreenSize);
@@ -51,8 +77,12 @@ export default function Header()
                                         <Link href={item.link}
                                               className="text-lg font-semibold hover:text-blue-300 transition duration-150 ease-in-out cursor-pointer">{item.title}</Link>
                                     </div>))}
-                                <Link href="/donate"
-                                      className="px-4 py-2 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] rounded-md text-white background-animate cursor-pointer hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
+                                {adminSignedIn &&
+                                    <div>
+                                        <Link href="/admin" className="text-lg font-semibold hover:text-blue-300 transition duration-150 ease-in-out cursor-pointer">Admin Page</Link>
+                                    </div>}
+                                    <Link href="/donate"
+                                    className="px-4 py-2 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] rounded-md text-white background-animate cursor-pointer hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
                             </div>
                             :
                             <div className="mx-auto md:mx-0 md:ml-auto">
@@ -67,6 +97,10 @@ export default function Header()
                                                    className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
                                                 {item.title}
                                             </Link>))}
+                                        {adminSignedIn && <Link onClick={() => setIsMenuOpen(false)} href={"/admin"} scroll={true}
+                                                                className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
+                                            Admin Page
+                                        </Link>}
                                         <Link href="/donate" onClick={() => setIsMenuOpen(false)} className="w-full pl-10 py-4 bg-gradient-to-r from-[#7F7FD5] via-[#86A8E7] to-[#91EAE4] text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
                                     </div>
                                 </Drawer>
