@@ -1,7 +1,7 @@
 "use client"
 import {BsFillImageFill} from "react-icons/bs";
 import {Button} from "@mui/joy";
-import {FormEvent, useState} from "react";
+import {useState} from "react";
 import {Event} from "@/app/entities/event";
 import supabase from "@/lib/supabase";
 import toast from "react-hot-toast";
@@ -42,6 +42,7 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
                 <label className="text-sm text-gray-300">Image</label>
                 <label className="md:w-96 md:h-52 w-72 h-40 border border-gray-300 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-200 transition duration-100 ease-out cursor-pointer" htmlFor="eventImageFileInput">
                     {image ?
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={image} className="w-full h-full object-cover" alt="Uploaded Image"/>
                         :
                         <BsFillImageFill className="w-full h-full p-10" />
@@ -101,18 +102,15 @@ async function addEvent(formData)
 
     if (image == null || image.size == 0)
         return;
-    console.log(image.name)
     await uploadAndSetImage(event, image);
 }
 
 async function uploadAndSetImage(event : Event, image: File)
 {
-    console.log("Uploading image");
     const filename = event.title.toLowerCase().replace(/\s/g, '_')
     const uploadImage = await supabase.storage.from("event_images").upload(filename, image)
     if(uploadImage.error != null)
     {
-        console.log("Failed to upload image")
         console.log(uploadImage.error);
         toast.error("Failed to save image");
         return;
@@ -121,7 +119,6 @@ async function uploadAndSetImage(event : Event, image: File)
     const updateEvent = await supabase.from("Event").update({image: filename}).eq("title", event.title);
     if(updateEvent.error != null)
     {
-        console.log("Failed to set filename")
         console.log(updateEvent.error);
         toast.error("Failed to set image for event");
         return;

@@ -37,9 +37,8 @@ export default function Header()
                 setAdminSignedIn(true);
             }
         });
-        supabase.auth.onAuthStateChange(async (event, session) =>
+        supabase.auth.onAuthStateChange(async (event) =>
         {
-            console.log("Called");
             if(event == "SIGNED_OUT")
             {
                 setAdminSignedIn(false);

@@ -4,7 +4,7 @@ import {useState} from "react";
 import LoadingAnimation from "@/app/components/utils/loading";
 import {Size} from "@/app/components/utils/size";
 import supabase from "@/lib/supabase";
-import {dateToSupabaseDate, getHijriMonth} from "@/app/components/utils/date";
+import {dateToSupabaseDate} from "@/app/components/utils/date";
 import toast from "react-hot-toast";
 
 export default function RemovePrayerTimesBtn()
@@ -46,8 +46,6 @@ export default function RemovePrayerTimesBtn()
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
 
-        console.log(firstDate);
-        console.log(lastDate);
         const result = await supabase.from("DailyPrayers").delete().gte("date", dateToSupabaseDate(firstDate)).lte("date", dateToSupabaseDate(lastDate));
 
         if(result.error != null)
