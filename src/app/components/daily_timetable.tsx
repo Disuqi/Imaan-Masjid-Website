@@ -135,27 +135,26 @@ function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : Salah
 {
     let upcomingSalah = SalahType.Fajr;
     let ukTime = getUkTime(currentDate);
-    ukTime = ukTime.replace("am", "").replace("pm", "");
 
     const ukTimeDate = new Date(`${currentDate.toDateString()} ${ukTime}`);
 
-    const fajrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.fajr_iqama}`);
+    const fajrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.fajr_iqama} am`);
     if(ukTimeDate > fajrIqamaDate)
         upcomingSalah = SalahType.Dhuhr;
 
-    const dhuhrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.dhuhr_iqama}`);
+    const dhuhrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.dhuhr_iqama} pm`);
     if(ukTimeDate > dhuhrIqamaDate)
         upcomingSalah = SalahType.Asr;
 
-    const asrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.asr_iqama}`);
+    const asrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.asr_iqama} pm`);
     if(ukTimeDate > asrIqamaDate)
         upcomingSalah = SalahType.Mughrib;
 
-    const mughribIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.mughrib_adhan}`);
+    const mughribIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.mughrib_adhan} pm`);
     if(ukTimeDate > mughribIqamaDate)
         upcomingSalah = SalahType.Isha;
 
-    const ishaIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.isha_iqama}`);
+    const ishaIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.isha_iqama} pm`);
     if(ukTimeDate > ishaIqamaDate)
         upcomingSalah = SalahType.Fajr;
 
