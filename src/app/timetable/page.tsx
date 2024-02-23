@@ -39,10 +39,10 @@ export default function Page()
             {
                 setPrayers(result.data);
             }
+            setLoading(false);
         });
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
-        setLoading(false);
     }, []);
 
     return <div className="mx-auto container m-5 max-w-vw">
