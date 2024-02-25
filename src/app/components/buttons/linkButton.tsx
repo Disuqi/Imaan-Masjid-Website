@@ -1,13 +1,10 @@
 import Link from "next/link";
 import {Button} from "@mui/joy";
+import {ReactNode} from "react";
 
-export default function LinkButton(props: {href : string, size? : "md" | "sm" | "lg", children})
+export default function LinkButton(props: {href : string, className?: string, size?: "md" | "sm" | "lg", variant?: "solid" | "soft" | "outlined" | "plain", endDecorator?: ReactNode , children : ReactNode})
 {
-    let size : "md" | "sm" | "lg" = "md";
-    if(props.size)
-        size = props.size;
-
-    return <Button size={size} component="div">
+    return <Button variant={props.variant} size={props.size} component="div" endDecorator={props.endDecorator} className={props.className}>
         <Link href={props.href}>
             {props.children}
         </Link>

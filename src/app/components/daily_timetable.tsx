@@ -1,7 +1,4 @@
 "use client"
-import Link from "next/link";
-import {Button} from "@mui/joy";
-import {FaArrowDownLong} from "react-icons/fa6";
 import LinkButton from "@/app/components/buttons/linkButton";
 import {
     apiFormattedHijriDate,
@@ -49,8 +46,7 @@ export default function DailyTimetable()
         apiFormattedHijriDate(today).then((result) => setHijriDate(result));
     }, []);
 
-    return <section className="h-[92vh] flex flex-col justify-between">
-        <div className="h-4/6 w-full bg-[url('/salah%20(4).jpg')] bg-cover">
+    return <div className="h-[60vh] bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
                 <div className="m-5">
                     <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20">
@@ -109,13 +105,7 @@ export default function DailyTimetable()
                     </div>
                 </div>
             </div>
-        </div>
-        <Link href="#about" className="flex justify-center items-center w-full h-2/6">
-            <Button variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
-                About Imaan Masjid
-            </Button>
-        </Link>
-    </section>;
+    </div>;
 }
 
 function ishaIqamaHasPassed(currentDate: Date, ishaIqama: string) : boolean
