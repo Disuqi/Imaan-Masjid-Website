@@ -12,8 +12,8 @@ import RamadanCountdown from "@/app/components/ramadan_countdown";
 
 export default function Page() {
   return (
-      <main className="snap-proximity flex flex-col">
-          <div className="snap-center h-[100dvh] flex flex-col">
+      <main className="flex flex-col">
+          <div className="h-[100dvh] flex flex-col">
               <div className="col-span-2 h-full">
                   <DailyTimetable/>
               </div>
@@ -23,7 +23,7 @@ export default function Page() {
                   </LinkButton>
               </div>
           </div>
-          <div id="ramadan2024" className="snap-center h-[100dvh] flex flex-col justify-evenly">
+          <div id="ramadan2024" className="h-[100dvh] flex flex-col justify-evenly">
               <RamadanCountdown/>
               <div className="flex justify-center items-center">
                   <LinkButton href="#about" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
@@ -31,7 +31,7 @@ export default function Page() {
                   </LinkButton>
               </div>
           </div>
-          <section id="about" className="snap-center h-[100dvh] flex justify-center items-center">
+          <section id="about" className="h-[100dvh] flex justify-center items-center">
               <About/>
           </section>
       </main>
