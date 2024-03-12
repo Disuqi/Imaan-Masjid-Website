@@ -46,8 +46,8 @@ export default function RamadanCountdown()
                 <h2 className="ml-auto text-2xl md:text-3xl font-black">COUNTDOWN</h2>
             </div>
             <div className="flex flex-col justify-center items-center gap-2">
-                {inClient? <Countdown date={new Date("03-11-2024")} renderer={renderCountdown}/> : renderCountdown({days: 0, hours: 0, minutes: 0, seconds: 0, completed: false})}
-                <h1 className="text-gray-300 font-semibold">Estimate: 11/03/2024</h1>
+                {inClient? <Countdown date={new Date("04-09-2024")} renderer={renderCountdown}/> : renderCountdown({days: 0, hours: 0, minutes: 0, seconds: 0, completed: false})}
+                <h1 className="text-gray-300 font-semibold">Estimate: 09/04/2024</h1>
             </div>
         </div>
 }
