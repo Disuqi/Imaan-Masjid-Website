@@ -5,7 +5,7 @@ import {AspectRatio, Button, Card, CardContent, CardOverflow, Divider, Typograph
 import {Event} from "@/app/entities/event";
 import supabase from "@/lib/supabase";
 import { IoTrashBin } from "react-icons/io5";
-import LoadingAnimation from "@/app/components/utils/loading";
+import LoadingAnimation from "@/lib/utils/loading";
 import toast, {Toaster} from "react-hot-toast";
 import Image from "next/image";
 import {DefaultMessage} from "@/app/components/defaultMessage";

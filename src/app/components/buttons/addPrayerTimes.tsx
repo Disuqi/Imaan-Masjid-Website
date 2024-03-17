@@ -1,8 +1,8 @@
 "use client"
 import {useState} from "react";
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
-import LoadingAnimation from "@/app/components/utils/loading";
-import {Size} from "@/app/components/utils/size";
+import LoadingAnimation from "@/lib/utils/loading";
+import {Size} from "@/lib/utils/size";
 import AddPrayerTimesForm from "@/app/components/forms/addPrayerTimes";
 
 export default function AddEventBtn()

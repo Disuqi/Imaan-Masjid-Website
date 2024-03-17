@@ -6,8 +6,8 @@ import {
     formatDateWithSuffix,
     formatSupabaseTime,
     getUkTime
-} from "@/app/components/utils/date";
-import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
+} from "@/lib/utils/date";
+import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import supabase from "@/lib/supabase";
 import {useEffect, useState} from "react";
 

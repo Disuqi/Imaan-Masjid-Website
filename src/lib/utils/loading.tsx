@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import {Size} from "@/app/components/utils/size";
+import {Size} from "@/lib/utils/size";
 
 export default function LoadingAnimation(props: {state: boolean, text?: string, size?: Size})
 {

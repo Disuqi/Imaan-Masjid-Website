@@ -5,12 +5,12 @@ import {
     dateToSupabaseDate,
     formatSupabaseTime,
     getMonth
-} from "@/app/components/utils/date";
-import {DailyPrayers, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
+} from "@/lib/utils/date";
+import {DailyPrayers, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {Sheet, Table} from "@mui/joy";
 import {DefaultMessage} from "@/app/components/defaultMessage";
 import {useEffect, useState} from "react";
-import LoadingAnimation from "@/app/components/utils/loading";
+import LoadingAnimation from "@/lib/utils/loading";
 
 export default function Page()
 {

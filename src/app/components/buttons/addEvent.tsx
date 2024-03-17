@@ -2,8 +2,8 @@
 import React, {useState} from "react";
 import AddEventForm from "@/app/components/forms/addEvent";
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
-import LoadingAnimation from "@/app/components/utils/loading";
-import {Size} from "@/app/components/utils/size";
+import LoadingAnimation from "@/lib/utils/loading";
+import {Size} from "@/lib/utils/size";
 
 export default function AddEventBtn()
 {
