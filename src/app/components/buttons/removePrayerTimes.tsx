@@ -1,7 +1,7 @@
 "use client"
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog, Select, Option} from "@mui/joy";
 import {useState} from "react";
-import LoadingAnimation from "@/lib/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 import {Size} from "@/lib/utils/size";
 import supabase from "@/lib/supabase";
 import {dateToSupabaseDate} from "@/lib/utils/date";

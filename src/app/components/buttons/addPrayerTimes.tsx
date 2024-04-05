@@ -1,7 +1,7 @@
 "use client"
 import {useState} from "react";
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
-import LoadingAnimation from "@/lib/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 import {Size} from "@/lib/utils/size";
 import AddPrayerTimesForm from "@/app/components/forms/addPrayerTimes";
 

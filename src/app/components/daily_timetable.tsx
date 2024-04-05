@@ -132,10 +132,10 @@ function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : Salah
     if(ukTimeDate > fajrIqamaDate)
         upcomingSalah = SalahType.Dhuhr;
 
-    let duhurAmPm = "";
+    let duhurAmPm = "am";
     if(parseInt(dailyPrayers.dhuhr_iqama.substring(0, 2)) < 12)
     {
-        duhurAmPm = "am";
+        duhurAmPm = "pm";
     }
     const dhuhrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.dhuhr_iqama} ${duhurAmPm}`);
     if(ukTimeDate > dhuhrIqamaDate)

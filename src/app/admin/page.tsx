@@ -6,7 +6,7 @@ import AddEventBtn from "@/app/components/buttons/addEvent";
 import RemoveEventBtn from "@/app/components/buttons/removeEvent";
 import supabase from "@/lib/supabase";
 import {Button} from "@mui/joy";
-import LoadingAnimation from "@/lib/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 import AddPrayerTimesBtn from "@/app/components/buttons/addPrayerTimes";
 import {Size} from "@/lib/utils/size";
 import RemovePrayerTimesBtn from "@/app/components/buttons/removePrayerTimes";

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import {DailyPrayers} from "@/lib/utils/salah";
 import supabase from "@/lib/supabase";
 import {dateToSupabaseDate} from "@/lib/utils/date";
-import LoadingAnimation from "@/lib/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 
 export default function AddPrayerTimesForm(props: {onStart: () => void, onComplete: () => void})
 {
