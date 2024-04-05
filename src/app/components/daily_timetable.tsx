@@ -6,8 +6,8 @@ import {
     formatDateWithSuffix,
     formatSupabaseTime,
     getUkTime
-} from "@/app/components/utils/date";
-import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
+} from "@/lib/utils/date";
+import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import supabase from "@/lib/supabase";
 import {useEffect, useState} from "react";
 
@@ -132,10 +132,10 @@ function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : Salah
     if(ukTimeDate > fajrIqamaDate)
         upcomingSalah = SalahType.Dhuhr;
 
-    let duhurAmPm = "";
+    let duhurAmPm = "am";
     if(parseInt(dailyPrayers.dhuhr_iqama.substring(0, 2)) < 12)
     {
-        duhurAmPm = "am";
+        duhurAmPm = "pm";
     }
     const dhuhrIqamaDate = new Date(`${currentDate.toDateString()} ${dailyPrayers.dhuhr_iqama} ${duhurAmPm}`);
     if(ukTimeDate > dhuhrIqamaDate)

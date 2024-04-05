@@ -5,12 +5,12 @@ import {
     dateToSupabaseDate,
     formatSupabaseTime,
     getMonth
-} from "@/app/components/utils/date";
-import {DailyPrayers, SalahToEnglish, SalahType} from "@/app/components/utils/salah";
+} from "@/lib/utils/date";
+import {DailyPrayers, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {Sheet, Table} from "@mui/joy";
 import {DefaultMessage} from "@/app/components/defaultMessage";
 import {useEffect, useState} from "react";
-import LoadingAnimation from "@/app/components/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 
 export default function Page()
 {
@@ -92,10 +92,9 @@ export default function Page()
                                 </thead>
                                 <tbody>
                                 {
-                                    prayers.map((prayer) => {
+                                    prayers.map((prayer, i) => {
                                         const date = new Date(prayer.date);
-                                        return <>
-                                            <tr>
+                                        return <tr key={"prayer_time_" + i}>
                                                 <td>{date.getDate()}</td>
                                                 <td>{prayer.hijri}</td>
                                                 <td>{date.toLocaleDateString('en-US', {weekday: 'short'})}</td>
@@ -110,7 +109,6 @@ export default function Page()
                                                 <td>{formatSupabaseTime(prayer.isha_adhan)}</td>
                                                 <td>{formatSupabaseTime(prayer.isha_iqama)}</td>
                                             </tr>
-                                        </>
                                     })
                                 }
                                 </tbody>

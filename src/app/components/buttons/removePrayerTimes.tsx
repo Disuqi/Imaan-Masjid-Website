@@ -1,10 +1,10 @@
 "use client"
 import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog, Select, Option} from "@mui/joy";
 import {useState} from "react";
-import LoadingAnimation from "@/app/components/utils/loading";
-import {Size} from "@/app/components/utils/size";
+import LoadingAnimation from "@/app/components/elements/loading";
+import {Size} from "@/lib/utils/size";
 import supabase from "@/lib/supabase";
-import {dateToSupabaseDate} from "@/app/components/utils/date";
+import {dateToSupabaseDate} from "@/lib/utils/date";
 import toast from "react-hot-toast";
 
 export default function RemovePrayerTimesBtn()

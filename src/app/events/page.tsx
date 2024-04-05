@@ -5,7 +5,7 @@ import {AspectRatio, Button, Card, CardContent, CardOverflow, Divider, Typograph
 import {Event} from "@/app/entities/event";
 import supabase from "@/lib/supabase";
 import { IoTrashBin } from "react-icons/io5";
-import LoadingAnimation from "@/app/components/utils/loading";
+import LoadingAnimation from "@/app/components/elements/loading";
 import toast, {Toaster} from "react-hot-toast";
 import Image from "next/image";
 import {DefaultMessage} from "@/app/components/defaultMessage";
@@ -66,7 +66,7 @@ export default function Page() {
                         <div className="flex flex-row gap-10 flex-wrap m-10">
                             {events.map((event) =>
                                     // eslint-disable-next-line react/jsx-key
-                                    <div id={titleToId(event.title)}>
+                                    <div key={titleToId(event.title)}>
                                         <Card variant="outlined" sx={{width: "24rem"}}>
                                             {event.imageUrl &&
                                                 <CardOverflow>

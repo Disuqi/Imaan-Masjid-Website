@@ -1,4 +1,4 @@
-import {formatSupabaseTime} from "@/app/components/utils/date";
+import {formatSupabaseTime} from "@/lib/utils/date";
 
 export class DailyPrayers
 {

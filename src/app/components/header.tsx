@@ -1,11 +1,10 @@
-
 "use client"
 import Link from "next/link";
 import {ScreenSize} from "@/app/constants";
 import {useEffect, useState} from "react";
 import {Button, Drawer} from "@mui/joy";
 import {LuMenu} from "react-icons/lu";
-import {widthToScreenSize} from "@/app/components/utils/screen";
+import {widthToScreenSize} from "@/lib/utils/screen";
 import supabase from "@/lib/supabase";
 
 export default function Header()
