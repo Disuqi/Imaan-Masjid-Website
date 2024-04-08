@@ -39,7 +39,7 @@ export default function LoadingAnimation(props: {state: boolean, text?: string, 
     }
 
     return <>
-            <div role="status" className="absolute top-0 left-0 w-full h-full z-10 flex justify-center items-center gap-4">
+            <div role="status" className="absolute top-0 left-0 w-full h-full bg-white z-10 flex justify-center items-center gap-4">
                 <h1 className={`font-semibold ${textSize}`}>{props.text}</h1>
                 <svg aria-hidden="true"
                      className={`inline ${animationSize} text-gray-200 animate-spin fill-blue-600`}

@@ -1,11 +1,10 @@
 "use client"
 import {Button} from "@mui/joy";
-import {FormEvent, useState} from "react";
+import {useState} from "react";
 import toast from "react-hot-toast";
 import {DailyPrayers} from "@/lib/utils/salah";
 import supabase from "@/lib/supabase";
 import {dateToSupabaseDate} from "@/lib/utils/date";
-import LoadingAnimation from "@/app/components/elements/loading";
 
 export default function AddPrayerTimesForm(props: {onStart: () => void, onComplete: () => void})
 {

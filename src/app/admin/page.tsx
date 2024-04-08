@@ -39,7 +39,7 @@ export default function Page()
     }, []);
 
     return <>
-        <div className="w-full h-[54.65vh] flex justify-center items-center">
+        <div className="w-full h-[54.65vh] flex justify-center items-center relative">
             <LoadingAnimation state={loading} size={Size.L}/>
             {adminSignedIn ?
                     <>
