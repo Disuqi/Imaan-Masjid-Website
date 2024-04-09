@@ -14,7 +14,7 @@ export default function Page() {
               </div>
               <div className="col-span-1 h-full flex justify-center items-center">
                   <LinkButton href="#ramadan2024" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
-                      Ramadan 2024
+                      Eid Al-Fitr 2024
                   </LinkButton>
               </div>
           </div>
