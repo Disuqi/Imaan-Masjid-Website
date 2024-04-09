@@ -52,7 +52,7 @@ export default function DailyTimetable()
     return <div className="h-[60vh] bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
                 <div className="m-5">
-                    <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20 relative">
+                    <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20 relative min-w-[300px] min-h-[100px]">
                         {today && hijriDate ? <>
                             <div className="flex flex-col">
                                 <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
