@@ -26,7 +26,6 @@ export default function DailyTimetable()
         setToday(date);
         supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(date)).single<DailyPrayers>().then(async (result) =>
         {
-
             if(result.error != null || result.data == null)
                 return;
 
