@@ -1,19 +1,19 @@
 "use client"
 import LinkButton from "@/app/components/buttons/linkButton";
+import { DailyPrayer } from "@/lib/entities/dailyprayer";
+import { getDailyPrayers } from "@/lib/prayers";
 import {
     apiFormattedHijriDate,
-    dateToSupabaseDate,
     formatDateWithSuffix,
     formatSupabaseTime,
     getUkTime
 } from "@/lib/utils/date";
-import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
-import supabase from "@/lib/supabase";
+import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
 
 export default function DailyTimetable()
 {
-    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>(null);
+    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayer>(null);
     const [hijriDate, setHijriDate] = useState<string>("");
     const [highlightedSalah, setHighlightedSalah] = useState<SalahType>(SalahType.Fajr);
 
@@ -21,23 +21,15 @@ export default function DailyTimetable()
 
     useEffect(() =>
     {
-        supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(today)).single<DailyPrayers>().then(async (result) =>
+        getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
-
-            if(result.error != null || result.data == null)
-                return;
-
-            let loadedDailyPrayers = result.data;
             const upcomingSalah = getUpcomingSalah(today, loadedDailyPrayers);
 
             if(ishaIqamaHasPassed(today, loadedDailyPrayers.isha_iqama))
             {
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                const secondResult = await supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(tomorrow)).single<DailyPrayers>();
-                if(secondResult.error != null || secondResult.data == null)
-                    return;
-                loadedDailyPrayers = secondResult.data;
+                loadedDailyPrayers = await getDailyPrayers(tomorrow);
             }
 
             setDailyPrayers(loadedDailyPrayers);
@@ -121,7 +113,7 @@ function ishaIqamaHasPassed(currentDate: Date, ishaIqama: string) : boolean
     return time1Date > time2Date;
 }
 
-function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : SalahType
+function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayer) : SalahType
 {
     let upcomingSalah = SalahType.Fajr;
     let ukTime = getUkTime(currentDate);

@@ -3,9 +3,8 @@ import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog, Sele
 import {useState} from "react";
 import LoadingAnimation from "@/app/components/elements/loading";
 import {Size} from "@/lib/utils/size";
-import supabase from "@/lib/supabase";
-import {dateToSupabaseDate} from "@/lib/utils/date";
 import toast from "react-hot-toast";
+import { getPrayerDates, removePrayerTimes } from "@/lib/prayers";
 
 export default function RemovePrayerTimesBtn()
 {
@@ -18,20 +17,21 @@ export default function RemovePrayerTimesBtn()
     {
         setModalState(true);
         const monthsMap = new Map<number, string>();
-        const allPrayerTimes = (await supabase.from("DailyPrayers").select("date")).data;
+        const allPrayerTimes = await getPrayerDates();
         if(allPrayerTimes == null)
         {
             setLoading(false);
             setModalState(false);
             return;
         }
-        const months = allPrayerTimes.map((prayerTime) => prayerTime["date"].substring(5, 7));
-        months.forEach((month) => monthsMap.set(parseInt(month), new Date(2024, parseInt(month), 0).toLocaleString('default', { month: 'long' })));
-        setOptions(Array.from(monthsMap));
+        const months = allPrayerTimes.map(getMonthName);
+        const uniqueMonthNames: Set<string> = new Set(months);
+
+        setOptions(Array.from(uniqueMonthNames));
         setLoading(false);
     };
 
-    const removePrayerTimes = async () =>
+    const onClickRemovePrayerTimes = async () =>
     {
         if(selectedMonth == null)
             toast.error("Please select a month");
@@ -46,12 +46,11 @@ export default function RemovePrayerTimesBtn()
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
 
-        const result = await supabase.from("DailyPrayers").delete().gte("date", dateToSupabaseDate(firstDate)).lte("date", dateToSupabaseDate(lastDate));
-
-        if(result.error != null)
-            toast.error("Failed to remove prayer times");
-        else
+        const success = await removePrayerTimes(firstDate, lastDate);
+        if(success)
             toast.success("Prayer times removed successfully");
+        else
+            toast.error("Failed to remove prayer times");
 
         setLoading(false);
         if (modalState)
@@ -80,9 +79,15 @@ export default function RemovePrayerTimesBtn()
                             }
                         </Select>
                     </div>
-                    <Button component="div" className="ml-auto" color="danger" onClick={removePrayerTimes}>Remove</Button>
+                    <Button component="div" className="ml-auto" color="danger" onClick={onClickRemovePrayerTimes}>Remove</Button>
                 </DialogContent>
             </ModalDialog>
         </Modal>
     </>
+}
+
+function getMonthName(date: Date): string
+{
+const options: Intl.DateTimeFormatOptions = { month: 'long' };
+return date.toLocaleDateString('en-US', options);
 }

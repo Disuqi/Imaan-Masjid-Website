@@ -4,12 +4,12 @@ import SignInForm from "@/app/components/forms/admin_signin";
 import toast, {Toaster} from "react-hot-toast";
 import AddEventBtn from "@/app/components/buttons/addEvent";
 import RemoveEventBtn from "@/app/components/buttons/removeEvent";
-import supabase from "@/lib/supabase";
 import {Button} from "@mui/joy";
 import LoadingAnimation from "@/app/components/elements/loading";
 import AddPrayerTimesBtn from "@/app/components/buttons/addPrayerTimes";
 import {Size} from "@/lib/utils/size";
 import RemovePrayerTimesBtn from "@/app/components/buttons/removePrayerTimes";
+import { getUser, signOut } from "@/lib/auth";
 
 export default function Page()
 {
@@ -18,16 +18,16 @@ export default function Page()
 
     const signOutAdmin = async () =>
     {
-        await supabase.auth.signOut();
+        await signOut();
         setAdminSignedIn(false);
         toast("Signed out");
     }
 
     useEffect(() =>
     {
-        supabase.auth.getUser().then((response) =>
+        getUser().then((response) =>
         {
-            if(response.data.user != null)
+            if(response)
             {
                 setAdminSignedIn(true);
             }

@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import {Button, Drawer} from "@mui/joy";
 import {LuMenu} from "react-icons/lu";
 import {widthToScreenSize} from "@/lib/utils/screen";
-import supabase from "@/lib/supabase";
+import { getUser } from "@/lib/auth";
 
 export default function Header()
 {
@@ -29,29 +29,14 @@ export default function Header()
         }
         window.addEventListener('resize', updateScreenSize);
         updateScreenSize();
-        supabase.auth.getUser().then((response) =>
+        getUser().then((response) =>
         {
-            if(response.data.user != null)
+            if(response)
             {
                 setAdminSignedIn(true);
             }
         });
-        supabase.auth.onAuthStateChange(async (event) =>
-        {
-            if(event == "SIGNED_OUT")
-            {
-                setAdminSignedIn(false);
-            }else
-            {
-                const getUserResponse = await supabase.auth.getUser();
-                if(getUserResponse.data.user != null)
-                {
-                    setAdminSignedIn(true);
-                }
-            }
-        });
 
-        // Remove the event listener when the component unmounts
         return () => {
             window.removeEventListener('resize', updateScreenSize);
         };
