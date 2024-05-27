@@ -89,9 +89,9 @@ async function addEventFromForm(formData)
     }
     const date: Date = new Date(dateTimeString);
 
-    const event : Event = {title: title, description: description, date: date};
-    const result = await addEvent(event);
-    if(!result)
+    let event : Event = {title: title, description: description, date: date};
+    event = await addEvent(event);
+    if(!event)
     {
         toast.error("Failed to add event");
         return;
@@ -101,10 +101,11 @@ async function addEventFromForm(formData)
 
     if (image == null || image.size == 0)
         return;
+
     await uploadAndSetImage(event, image);
 }
 
-async function uploadAndSetImage(event : Event, image: File)
+async function uploadAndSetImage(event : Event, image: File) : Promise<Event>
 {
     const formdata = new FormData();
     formdata.append("image", image);
@@ -112,8 +113,9 @@ async function uploadAndSetImage(event : Event, image: File)
     if(!result)
     {
         toast.error("Failed to save image");
-        return;
+        return null;
     }
 
     toast.success("Image set for event");
+    return event;
 }

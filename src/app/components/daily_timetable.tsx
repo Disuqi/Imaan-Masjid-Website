@@ -43,7 +43,7 @@ export default function DailyTimetable()
                 <div className="m-5">
                     <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
-                            <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
+                            <h1 className="text-xl md:text-3xl font-bold" suppressHydrationWarning>{formatDateWithSuffix(today)}</h1>
                             {hijriDate && <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>}
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">

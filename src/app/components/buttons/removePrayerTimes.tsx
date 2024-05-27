@@ -10,7 +10,7 @@ export default function RemovePrayerTimesBtn()
 {
     const [modalState, setModalState] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState<{name: string, value: number}[]>([]);
     const [selectedMonth, setSelectedMonth] = useState(0);
 
     const openModal = async () =>
@@ -24,10 +24,19 @@ export default function RemovePrayerTimesBtn()
             setModalState(false);
             return;
         }
-        const months = allPrayerTimes.map(getMonthName);
-        const uniqueMonthNames: Set<string> = new Set(months);
 
-        setOptions(Array.from(uniqueMonthNames));
+        const map = new Map<number, string>();
+        allPrayerTimes.map((prayerTime) => {
+            const result = getMonthNameValuePair(prayerTime);
+            map.set(result.value, result.name);
+        });
+
+        const newOptions = [];
+        map.forEach((value, key) =>
+        {
+            newOptions.push({name: value, value: key});
+        });
+        setOptions(newOptions);
         setLoading(false);
     };
 
@@ -40,7 +49,7 @@ export default function RemovePrayerTimesBtn()
 
         const firstDate = new Date();
         firstDate.setDate(1);
-        firstDate.setMonth(selectedMonth - 1);
+        firstDate.setMonth(selectedMonth);
 
         const lastDate = new Date(firstDate);
         lastDate.setMonth(lastDate.getMonth() + 1);
@@ -75,7 +84,7 @@ export default function RemovePrayerTimesBtn()
                         <Select id="select-month" placeholder="Choose a month…" onChange={selectMonth}>
                             {
                                 // eslint-disable-next-line react/jsx-key
-                                options.map(([key, value]) => <Option key={key} value={key}>{value}</Option>)
+                                options.map((month) => <Option key={month.value} value={month.value}>{month.name}</Option>)
                             }
                         </Select>
                     </div>
@@ -86,8 +95,7 @@ export default function RemovePrayerTimesBtn()
     </>
 }
 
-function getMonthName(date: Date): string
+function getMonthNameValuePair(date: Date): { name: string, value: number }
 {
-const options: Intl.DateTimeFormatOptions = { month: 'long' };
-return date.toLocaleDateString('en-US', options);
+    return { name: date.toLocaleString('default',  { month: 'long' }), value: date.getMonth() }
 }

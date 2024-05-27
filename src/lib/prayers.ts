@@ -44,7 +44,7 @@ export async function addPrayer(prayer: DailyPrayer) : Promise<boolean>
 
 export async function getPrayerDates() : Promise<Date[]>
 {
-    const result = await supabase.from("DailyPrayers").select("date").returns<string[]>();
+    const result = await supabase.from("DailyPrayers").select("date");
 
     if(result.error != null)
     {
@@ -52,12 +52,12 @@ export async function getPrayerDates() : Promise<Date[]>
         return null;
     }
 
-    return result.data.map((dateS : string) => new Date(dateS));
+    return result.data.map((result) => new Date(result.date));
 }
 
-export async function removePrayerTimes(firstDate: Date, lastDate: Date) : Promise<boolean>
+export async function removePrayerTimes(from: Date, to: Date) : Promise<boolean>
 {
-    const result = await supabase.from("DailyPrayers").delete().gte("date", firstDate.toISOString()).lte("date", lastDate.toISOString());
+    const result = await supabase.from("DailyPrayers").delete().gte("date", from.toISOString()).lte("date", to.toISOString());
 
     if(result.error != null)
     {

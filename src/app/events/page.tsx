@@ -32,22 +32,27 @@ export default function Page() {
         });
     }, []);
 
-    const onDeleteEvent = async (id) =>
+    const onDeleteEvent = async (event : Event) =>
     {
-        const event = events.find((event) => event.id == id);
         if(event.image != null)
         {
-            await deleteImage(event);
+            const result1 = await deleteImage(event);
+            if(!result1)
+            {
+                toast.error("Failed to delete image");
+                return;
+            }
         }
 
-        await deleteEvent(event);
-        const updatedEvents = await getEvents();
-        if(events.length == updatedEvents.length)
-            toast.error("Failed to delete event");
-        else
+        const result2 = await deleteEvent(event);
+        if (result2)
         {
-            setEvents(updatedEvents);
             toast.success("Successfully deleted event");
+            const updatedEvents = events.filter((e) => e.id != event.id);
+            setEvents(updatedEvents);
+        }else
+        {
+            toast.error("Failed to delete event");
         }
     };
 
@@ -77,7 +82,7 @@ export default function Page() {
                                                     <div>
                                                         {adminSignedIn &&
                                                             <>
-                                                                <Button variant="plain" color="danger" size="sm" onClick={() => onDeleteEvent}>
+                                                                <Button variant="plain" color="danger" size="sm" onClick={() => onDeleteEvent(event)}>
                                                                     <IoTrashBin />
                                                                 </Button>
                                                             </>
