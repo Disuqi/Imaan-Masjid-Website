@@ -38,7 +38,7 @@ export default function Page()
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
     }, []);
 
-    return <div className="mx-auto container m-5 max-w-vw">
+    return <div className="mx-auto container m-5 max-w-vw relative">
         <LoadingAnimation state={loading}/>
         {
             prayers.length > 0 ?

@@ -57,7 +57,7 @@ export default function Page() {
     };
 
     return <>
-        <div className="container mx-auto min-h-[54.65vh] w-full">
+        <div className="container mx-auto min-h-[54.65vh] w-full relative">
             <LoadingAnimation state={loading}/>
             {
                 events?.length > 0 ?

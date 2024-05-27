@@ -85,7 +85,7 @@ async function addEventFromForm(formData)
     let dateTimeString: string = `${dateString}`;
     if(timeString != null && timeString != "")
     {
-        dateTimeString += `T${timeString}`;
+        dateTimeString += ` T${timeString}`;
     }
     const date: Date = new Date(dateTimeString);
 
