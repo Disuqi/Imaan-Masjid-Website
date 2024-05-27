@@ -1,21 +1,21 @@
 "use client"
-import supabase from "@/lib/supabase";
 import {
     apiHijriMonth,
-    dateToSupabaseDate,
     formatSupabaseTime,
     getMonth
 } from "@/lib/utils/date";
-import {DailyPrayers, SalahToEnglish, SalahType} from "@/lib/utils/salah";
+import {SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {Sheet, Table} from "@mui/joy";
 import {DefaultMessage} from "@/app/components/defaultMessage";
 import {useEffect, useState} from "react";
 import LoadingAnimation from "@/app/components/elements/loading";
+import { getPrayers } from "@/lib/prayers";
+import { DailyPrayer } from "@/lib/entities/dailyprayer";
 
 export default function Page()
 {
     const [loading, setLoading] = useState(true);
-    const [prayers, setPrayers] = useState<DailyPrayers[]>([]);
+    const [prayers, setPrayers] = useState<DailyPrayer[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
     const today = new Date();
@@ -29,16 +29,9 @@ export default function Page()
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
 
-        supabase.from("DailyPrayers")
-            .select("*")
-            .gte("date", dateToSupabaseDate(firstDate))
-            .lte("date", dateToSupabaseDate(lastDate))
-            .returns<DailyPrayers[]>().then((result) =>
-        {
-            if(result.error == null)
-            {
-                setPrayers(result.data);
-            }
+        getPrayers(firstDate, lastDate).then((result) =>
+        {    
+            setPrayers(result);
             setLoading(false);
         });
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));

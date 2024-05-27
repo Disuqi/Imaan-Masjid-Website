@@ -1,7 +1,7 @@
 "use client"
+import { signIn } from "@/lib/auth";
 import {Button} from "@mui/joy";
 import {useState} from "react";
-import supabase from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default function SignInForm(props: {onSuccessfullSignIn: () => void})
@@ -18,14 +18,13 @@ export default function SignInForm(props: {onSuccessfullSignIn: () => void})
     {
         const email = formData["email"];
         const password = formData["password"];
-        supabase.auth.signInWithPassword({email, password}).then((response) =>
+        signIn(email, password).then((response) =>
         {
-            if(response.data.user != null)
+            if(response)
             {
                 toast.success("Signed in");
                 props.onSuccessfullSignIn();
-            }
-            if(response.error != null)
+            }else
             {
                 toast.error("Incorrect credentials");
             }

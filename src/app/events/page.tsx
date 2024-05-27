@@ -2,13 +2,14 @@
 import React, {useEffect} from "react";
 import ShareButton from "@/app/components/buttons/share";
 import {AspectRatio, Button, Card, CardContent, CardOverflow, Divider, Typography} from "@mui/joy";
-import {Event} from "@/app/entities/event";
-import supabase from "@/lib/supabase";
+import {Event} from "@/lib/entities/event";
 import { IoTrashBin } from "react-icons/io5";
 import LoadingAnimation from "@/app/components/elements/loading";
 import toast, {Toaster} from "react-hot-toast";
 import Image from "next/image";
 import {DefaultMessage} from "@/app/components/defaultMessage";
+import { deleteEvent, deleteImage, getEvents } from "@/lib/events";
+import { getUser } from "@/lib/auth";
 
 export default function Page() {
     const [events, setEvents] = React.useState<Event[]>(null);
@@ -16,46 +17,45 @@ export default function Page() {
     const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
-        supabase.from("Event").select("*").returns<Event[]>().then((response) =>
+        getEvents().then((events) =>
         {
-            response.data.forEach((event) => {
+            events.forEach((event) => {
                 if(event.date)
                     event.date = new Date(event.date);
-                if(event.image)
-                    event.imageUrl = getEventImageUrl(event);
             });
-            setEvents(response.data ?? []);
+            setEvents(events ?? []);
             setLoading(false);
         });
-        supabase.auth.getUser().then((response) =>
+        getUser().then((response) =>
         {
-            if(response.data.user != null)
-            {
-                setAdminSignedIn(true);
-            }
+            setAdminSignedIn(true);
         });
     }, []);
 
-    const deleteEvent = async (id) =>
+    const onDeleteEvent = async (event : Event) =>
     {
-        const event = events.find((event) => event.id == id);
         if(event.image != null)
         {
-            await supabase.storage.from("event_images").remove([event.image]);
+            const result1 = await deleteImage(event);
+            if(!result1)
+            {
+                toast.error("Failed to delete image");
+                return;
+            }
         }
 
-        const response = await supabase.from("Event").delete().match({id: id});
-        if(response.error != null)
-        {
-            toast.error("Failed to delete event");
-        }else
+        const result2 = await deleteEvent(event);
+        if (result2)
         {
             toast.success("Successfully deleted event");
-            setEvents(events.filter((event) => event.id != id));
+            const updatedEvents = events.filter((e) => e.id != event.id);
+            setEvents(updatedEvents);
+        }else
+        {
+            toast.error("Failed to delete event");
         }
     };
 
-    supabase.storage.from("event_images").getPublicUrl("test.jpg");
     return <>
         <div className="container mx-auto min-h-[54.65vh] w-full relative">
             <LoadingAnimation state={loading}/>
@@ -82,7 +82,7 @@ export default function Page() {
                                                     <div>
                                                         {adminSignedIn &&
                                                             <>
-                                                                <Button variant="plain" color="danger" size="sm" onClick={() => deleteEvent(event.id)}>
+                                                                <Button variant="plain" color="danger" size="sm" onClick={() => onDeleteEvent(event)}>
                                                                     <IoTrashBin />
                                                                 </Button>
                                                             </>
@@ -130,12 +130,6 @@ export default function Page() {
         </div>
         <Toaster position={"top-center"}/>
     </>;
-}
-
-function getEventImageUrl(event : Event) : string
-{
-    const response = supabase.storage.from("event_images").getPublicUrl(event.image);
-    return response.data.publicUrl;
 }
 
 function formatTime(date: Date) : string

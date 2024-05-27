@@ -1,71 +1,56 @@
 "use client"
 import LinkButton from "@/app/components/buttons/linkButton";
+import { DailyPrayer } from "@/lib/entities/dailyprayer";
+import { getDailyPrayers } from "@/lib/prayers";
 import {
     apiFormattedHijriDate,
-    dateToSupabaseDate,
     formatDateWithSuffix,
     formatSupabaseTime,
     getUkTime
 } from "@/lib/utils/date";
-import {DailyPrayers, SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
-import supabase from "@/lib/supabase";
+import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
-import LoadingAnimation from "./elements/loading";
-import { Size } from "@/lib/utils/size";
 
 export default function DailyTimetable()
 {
-    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayers>(null);
+    const [dailyPrayers, setDailyPrayers] = useState<DailyPrayer>(null);
     const [hijriDate, setHijriDate] = useState<string>("");
     const [highlightedSalah, setHighlightedSalah] = useState<SalahType>(SalahType.Fajr);
-    const [today, setToday] = useState<Date>(null);
+
+    const today = new Date();
 
     useEffect(() =>
     {
-        const date = new Date();
-        setToday(date);
-        supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(date)).single<DailyPrayers>().then(async (result) =>
+        getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
-            if(result.error != null || result.data == null)
-                return;
+            const upcomingSalah = getUpcomingSalah(today, loadedDailyPrayers);
 
-            let loadedDailyPrayers = result.data;
-            const upcomingSalah = getUpcomingSalah(date, loadedDailyPrayers);
-
-            if(ishaIqamaHasPassed(date, loadedDailyPrayers.isha_iqama))
+            if(ishaIqamaHasPassed(today, loadedDailyPrayers.isha_iqama))
             {
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                const secondResult = await supabase.from("DailyPrayers").select().eq("date", dateToSupabaseDate(tomorrow)).single<DailyPrayers>();
-                if(secondResult.error != null || secondResult.data == null)
-                    return;
-                loadedDailyPrayers = secondResult.data;
+                loadedDailyPrayers = await getDailyPrayers(tomorrow);
             }
 
             setDailyPrayers(loadedDailyPrayers);
             setHighlightedSalah(upcomingSalah);
         });
-        apiFormattedHijriDate(date).then((result) => setHijriDate(result));
+        apiFormattedHijriDate(today).then((result) => setHijriDate(result));
     }, []);
 
     return <div className="h-[60vh] bg-[url('/salah%20(4).jpg')] bg-cover">
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
                 <div className="m-5">
-                    <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20 relative min-w-[300px] min-h-[100px]">
-                        {today && hijriDate ? <>
-                            <div className="flex flex-col">
-                                <h1 className="text-xl md:text-3xl font-bold">{formatDateWithSuffix(today)}</h1>
-                                <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>
-                            </div>
-                            <div className="flex justify-center items-center md:w-auto w-[53%]">
-                                <LinkButton href="/timetable">
-                                    <h1 className="text-nowrap whitespace-nowrap text-center text-sm md:text-lg">Full Timetable</h1>
-                                </LinkButton>
-                            </div>
-                        </>
-                        :
-                        <LoadingAnimation text="Loading" state={true} size={Size.S}/>
-                        }
+                    <div className="rounded-t-md bg-white p-6 flex flex-row justify-between gap-5 md:gap-20">
+                        <div className="flex flex-col">
+                            <h1 className="text-xl md:text-3xl font-bold" suppressHydrationWarning>{formatDateWithSuffix(today)}</h1>
+                            {hijriDate && <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>}
+                        </div>
+                        <div className="flex justify-center items-center md:w-auto w-[53%]">
+                            <LinkButton href="/timetable">
+                                <h1 className="text-nowrap whitespace-nowrap text-center text-sm md:text-lg">Full Timetable</h1>
+                            </LinkButton>
+                        </div>
                     </div>
                     <div className="rounded-b-md bg-gray-50 py-2">
                         {
@@ -128,7 +113,7 @@ function ishaIqamaHasPassed(currentDate: Date, ishaIqama: string) : boolean
     return time1Date > time2Date;
 }
 
-function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayers) : SalahType
+function getUpcomingSalah(currentDate: Date, dailyPrayers: DailyPrayer) : SalahType
 {
     let upcomingSalah = SalahType.Fajr;
     let ukTime = getUkTime(currentDate);

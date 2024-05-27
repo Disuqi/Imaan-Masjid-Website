@@ -2,9 +2,8 @@
 import {Button} from "@mui/joy";
 import {useState} from "react";
 import toast from "react-hot-toast";
-import {DailyPrayers} from "@/lib/utils/salah";
-import supabase from "@/lib/supabase";
-import {dateToSupabaseDate} from "@/lib/utils/date";
+import {DailyPrayer} from "@/lib/entities/dailyprayer";
+import { addPrayer } from "@/lib/prayers";
 
 export default function AddPrayerTimesForm(props: {onStart: () => void, onComplete: () => void})
 {
@@ -72,12 +71,24 @@ async function addDailyPrayer(prayersFile) : Promise<void>
             const isha_iqama = row[11];
 
             const date = new Date(year, month, parseInt(day));
-            const prayer = new DailyPrayers(dateToSupabaseDate(date), hijri, fajr_adhan, fajr_iqama, sunrise, dhuhr_adhan, dhuhr_iqama, asr_adhan, asr_iqama, mughrib_adhan, isha_adhan, isha_iqama);
-            const result = await supabase.from("DailyPrayers").insert(prayer);
-            if(result.error)
+            const prayer : DailyPrayer = {
+                date: date.toISOString(),
+                hijri: hijri, 
+                fajr_adhan: fajr_adhan, 
+                fajr_iqama: fajr_iqama,
+                sunrise: sunrise, 
+                dhuhr_adhan: dhuhr_adhan, 
+                dhuhr_iqama: dhuhr_iqama, 
+                asr_adhan: asr_adhan, 
+                asr_iqama: asr_iqama, 
+                mughrib_adhan: mughrib_adhan, 
+                isha_adhan: isha_adhan, 
+                isha_iqama: isha_iqama
+            };
+            const result = await addPrayer(prayer);
+            if(!result)
             {
                 toast.error("Failed to add prayer times");
-                console.log(result.error);
                 return;
             }
         }

@@ -2,9 +2,9 @@
 import {BsFillImageFill} from "react-icons/bs";
 import {Button} from "@mui/joy";
 import {useState} from "react";
-import {Event} from "@/app/entities/event";
-import supabase from "@/lib/supabase";
+import {Event} from "@/lib/entities/event";
 import toast from "react-hot-toast";
+import { addEvent, updateEvent, uploadImage } from "@/lib/events";
 
 export default function AddEventForm(props: {onStart: () => void, onComplete: () => void})
 {
@@ -26,7 +26,7 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
     {
         props.onStart();
         //@ts-ignore
-        await addEvent(formData);
+        await addEventFromForm(formData);
         props.onComplete();
     };
 
@@ -74,7 +74,7 @@ export default function AddEventForm(props: {onStart: () => void, onComplete: ()
 }
 
 
-async function addEvent(formData)
+async function addEventFromForm(formData)
 {
     const title : string = formData["title"] as string;
     const description : string = formData["description"] as string;
@@ -89,11 +89,10 @@ async function addEvent(formData)
     }
     const date: Date = new Date(dateTimeString);
 
-    const event : Event = new Event(title, description, date)
-    const addEvent = await supabase.from("Event").insert(event);
-    if(addEvent.error != null)
+    let event : Event = {title: title, description: description, date: date};
+    event = await addEvent(event);
+    if(!event)
     {
-        console.log(addEvent.error);
         toast.error("Failed to add event");
         return;
     }
@@ -102,27 +101,21 @@ async function addEvent(formData)
 
     if (image == null || image.size == 0)
         return;
+
     await uploadAndSetImage(event, image);
 }
 
-async function uploadAndSetImage(event : Event, image: File)
+async function uploadAndSetImage(event : Event, image: File) : Promise<Event>
 {
-    const filename = event.title.toLowerCase().replace(/\s/g, '_')
-    const uploadImage = await supabase.storage.from("event_images").upload(filename, image)
-    if(uploadImage.error != null)
+    const formdata = new FormData();
+    formdata.append("image", image);
+    const result = await uploadImage(event, formdata);
+    if(!result)
     {
-        console.log(uploadImage.error);
         toast.error("Failed to save image");
-        return;
-    }
-
-    const updateEvent = await supabase.from("Event").update({image: filename}).eq("title", event.title);
-    if(updateEvent.error != null)
-    {
-        console.log(updateEvent.error);
-        toast.error("Failed to set image for event");
-        return;
+        return null;
     }
 
     toast.success("Image set for event");
+    return event;
 }
