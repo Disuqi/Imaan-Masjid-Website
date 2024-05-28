@@ -3,6 +3,7 @@ import About from "@/app/components/about";
 import React from "react";
 import {FaArrowDownLong} from "react-icons/fa6";
 import LinkButton from "@/app/components/buttons/linkButton";
+import EventCountdown from "@/app/components/event_countdown";
 
 export default function Page() {
   return (
@@ -12,6 +13,14 @@ export default function Page() {
                   <DailyTimetable/>
               </div>
               <div className="col-span-1 h-full flex justify-center items-center">
+                  <LinkButton href="#aladha2024" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
+                      Eid Al-Adha
+                  </LinkButton>
+              </div>
+          </div>
+          <div id="aladha2024" className="h-[100dvh] flex flex-col justify-evenly">
+              <EventCountdown/>
+              <div className="flex justify-center items-center">
                   <LinkButton href="#about" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
                       About Imaan Masjid
                   </LinkButton>
