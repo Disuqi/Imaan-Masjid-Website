@@ -1,5 +1,5 @@
 "use server"
-import supabase from "@/lib/supabase";
+import supabase, { toSupabaseDate } from "@/lib/supabase";
 import { DailyPrayer } from "./entities/dailyprayer";
 
 export async function getDailyPrayers(date: Date) : Promise<DailyPrayer>
@@ -19,6 +19,7 @@ export async function getPrayers(from: Date, to: Date) : Promise<DailyPrayer[]>
     .select()
     .gte("date", from.toISOString())
     .lte("date", to.toISOString())
+    .order("date")
     .returns<DailyPrayer[]>();
 
     if(result.error != null)
