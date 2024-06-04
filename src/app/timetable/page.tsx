@@ -23,7 +23,8 @@ export default function Page()
     useEffect(() =>
     {
         setLoading(true);
-        const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        const firstDate = today;
+        firstDate.setDate(1);
         const lastDate = new Date(firstDate);
 
         lastDate.setMonth(lastDate.getMonth() + 1);
