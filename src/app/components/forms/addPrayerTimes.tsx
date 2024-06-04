@@ -3,7 +3,7 @@ import {Button} from "@mui/joy";
 import {useState} from "react";
 import toast from "react-hot-toast";
 import {DailyPrayer} from "@/lib/entities/dailyprayer";
-import { addPrayer } from "@/lib/prayers";
+import {addPrayer, removePrayerTimes} from "@/lib/prayers";
 
 export default function AddPrayerTimesForm(props: {onStart: () => void, onComplete: () => void})
 {
@@ -53,6 +53,7 @@ async function addDailyPrayer(prayersFile) : Promise<void>
         }
         const month = monthYear.getMonth();
         const year = monthYear.getFullYear();
+        const successfullyAdded : DailyPrayer[] = [];
         for (const row of prayerTimes)
         {
             if(row.length < 12 || row[0] == "")
@@ -88,8 +89,12 @@ async function addDailyPrayer(prayersFile) : Promise<void>
             const result = await addPrayer(prayer);
             if(!result)
             {
+                await removePrayerTimes(new Date(successfullyAdded[0].date), new Date(successfullyAdded[successfullyAdded.length - 1].date));
                 toast.error("Failed to add prayer times");
                 return;
+            }else
+            {
+                successfullyAdded.push(prayer);
             }
         }
         toast.success("Prayer times added");

@@ -23,11 +23,12 @@ export default function Page()
     useEffect(() =>
     {
         setLoading(true);
-        const firstDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        const firstDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1));
         const lastDate = new Date(firstDate);
 
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
+        console.log(lastDate.toISOString());
 
         getPrayers(firstDate, lastDate).then((result) =>
         {    

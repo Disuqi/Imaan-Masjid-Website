@@ -1,16 +1,56 @@
-export default function RamadanCountdown()
+"use client"
+import Countdown from "react-countdown";
+import {useEffect, useState} from "react";
+
+export default function EventCountdown()
 {
-        return <div className="container mx-auto flex flex-col md:flex-row justify-center gap-10 md:gap-0 md:justify-evenly items-center">
-            <div className="flex flex-col justify-center">
-                <div className="flex">
-                    <h1 className="px-2 bg-gradient-to-r from-[#00C9FF] to-[#92FE9D] text-white background-animate text-4xl md:text-6xl font-black">EID AL-FITR
-                        2024</h1>
+    const [inClient, setInClient] = useState(false);
+
+    useEffect(() =>{setInClient(true)}, []);
+    const renderCountdown = ({days, hours, minutes, seconds, completed}) =>
+    {
+        if(completed)
+        {
+            return <h1>EID AL-ADHA HAS ARRIVED</h1>
+        }else
+        {
+            return <>
+                <div className="flex flex-row justify-center items-start gap-1 md:gap-3">
+                    <div className="flex flex-col items-center">
+                        <h1 className="text-2xl md:text-6xl font-bold">{days}</h1>
+                        <h2 className="text-md md:text-xl font-bold">DAYS</h2>
+                    </div>
+                    <h1 className="text-2xl md:text-6xl font-bold">:</h1>
+                    <div className="flex flex-col items-center">
+                        <h1 className="text-2xl md:text-6xl font-bold">{hours}</h1>
+                        <h2 className="text-md md:text-xl font-bold">HOURS</h2>
+                    </div>
+                    <h1 className="text-2xl md:text-6xl font-bold">:</h1>
+                    <div className="flex flex-col items-center">
+                        <h1 className="text-2xl md:text-6xl font-bold">{minutes}</h1>
+                        <h2 className="text-md md:text-xl font-bold">MINUTES</h2>
+                    </div>
+                    <h1 className="text-2xl md:text-6xl font-bold">:</h1>
+                    <div className="flex flex-col items-center">
+                        <h1 className="text-2xl md:text-6xl font-bold">{seconds}</h1>
+                        <h2 className="text-md md:text-xl font-bold">SECONDS</h2>
+                    </div>
                 </div>
-                <h2 className="ml-auto text-2xl md:text-3xl font-black">SALAH</h2>
+                <h1 className="text-gray-300 font-semibold">Estimate: 16/06/2024</h1>
+            </>
+        }
+    }
+    return <div
+        className="container mx-auto flex flex-col md:flex-row justify-center gap-10 md:gap-0 md:justify-evenly items-center">
+        <div className="flex flex-col justify-center">
+            <div className="flex">
+                <h1 className="px-2 bg-gradient-to-r from-[#00C9FF] to-[#92FE9D] text-white background-animate text-4xl md:text-6xl font-black">EID AL-ADHA
+                    2024</h1>
             </div>
-            <div className="flex flex-col justify-center items-center gap-2">
-                <h1 className="text-center font-bold text-3xl">9:00 am<br/>At the Masjid</h1>
-                <p className="text-gray-300 font-semibold">10/04/2024</p>
-            </div>
+            <h2 className="ml-auto text-2xl md:text-3xl font-black">COUNTDOWN</h2>
         </div>
+        <div className="flex flex-col justify-center items-center gap-2">
+            {inClient? <Countdown date={new Date("06-16-2024")} renderer={renderCountdown}/> : renderCountdown({days: 0, hours: 0, minutes: 0, seconds: 0, completed: false})}
+        </div>
+    </div>
 }
