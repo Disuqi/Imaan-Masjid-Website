@@ -23,17 +23,8 @@ export default function DailyTimetable()
         setToday(new Date());
         getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
-
             if(loadedDailyPrayers == null)
-            {
-                console.log("getDailyPrayers is null");
                 return;
-            }
-            else
-            {
-                console.log("LOADED DAILY PRAYERS not null");
-                console.log(loadedDailyPrayers);
-            }
 
             const upcomingSalah = getUpcomingSalah(today, loadedDailyPrayers);
 
