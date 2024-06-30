@@ -16,14 +16,18 @@ export default function DailyTimetable()
     const [dailyPrayers, setDailyPrayers] = useState<DailyPrayer>(null);
     const [hijriDate, setHijriDate] = useState<string>("");
     const [highlightedSalah, setHighlightedSalah] = useState<SalahType>(SalahType.Fajr);
-
-    const today = new Date();
+    const [today, setToday] = useState(new Date());
 
     useEffect(() =>
     {
+        setToday(new Date());
         getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
+            if(loadedDailyPrayers == null)
+                return;
+
             const upcomingSalah = getUpcomingSalah(today, loadedDailyPrayers);
+
 
             if(ishaIqamaHasPassed(today, loadedDailyPrayers.isha_iqama))
             {
