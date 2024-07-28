@@ -2,6 +2,11 @@
 import supabase, { toSupabaseDate } from "@/lib/supabase";
 import { DailyPrayer } from "./entities/dailyprayer";
 
+export async function getCurrentDate() : Promise<Date>
+{
+    return new Date();
+}
+
 export async function getDailyPrayers(date: Date) : Promise<DailyPrayer>
 {
     const result = await supabase.from("DailyPrayers").select().eq("date", date.toISOString()).single<DailyPrayer>();

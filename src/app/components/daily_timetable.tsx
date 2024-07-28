@@ -1,7 +1,7 @@
 "use client"
 import LinkButton from "@/app/components/buttons/linkButton";
 import { DailyPrayer } from "@/lib/entities/dailyprayer";
-import { getDailyPrayers } from "@/lib/prayers";
+import { getCurrentDate, getDailyPrayers } from "@/lib/prayers";
 import {
     apiFormattedHijriDate,
     formatDateWithSuffix,
@@ -20,7 +20,11 @@ export default function DailyTimetable()
 
     useEffect(() =>
     {
-        setToday(new Date());
+        getCurrentDate().then(async (date) => 
+        {
+            setToday(date);
+        });
+
         getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
             if(loadedDailyPrayers == null)
