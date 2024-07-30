@@ -11,20 +11,17 @@ import {
 import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
 
+export const dynamic = 'force-dynamic';
+
 export default function DailyTimetable()
 {
     const [dailyPrayers, setDailyPrayers] = useState<DailyPrayer>(null);
     const [hijriDate, setHijriDate] = useState<string>("");
     const [highlightedSalah, setHighlightedSalah] = useState<SalahType>(SalahType.Fajr);
-    const [today, setToday] = useState(new Date());
+    const today = new Date();
 
     useEffect(() =>
     {
-        getCurrentDate().then(async (date) => 
-        {
-            setToday(date);
-        });
-
         getDailyPrayers(today).then(async (loadedDailyPrayers) =>
         {
             if(loadedDailyPrayers == null)
