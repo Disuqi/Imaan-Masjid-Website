@@ -17,7 +17,7 @@ export default function About()
                 <div className="h-auto xl:h-full xl:w-[40%] flex flex-col gap-2 p-10">
                     <h1 className="text-2xl xl:text-4xl font-bold">Imaan Masjid</h1>
                     <p className="text-lg xl:text-xl">The Imaan Masjid as an organisation runs a Masjid, Madrassah and Community Centre in Bolton – aiming to enrich the local and wider communities with the pure knowledge of the Quran and Sunnah as understood by the companions and righteous predecessors.</p>
-                    <p className="font-semibold">Open from Duhur - Isha (and around Fajr time).</p>
+                    <p className="font-semibold">Open from Dhuhur - Isha (and around Fajr time).</p>
                     <div className="my-4">
                         <LinkButton className="text-md md:text-lg" href="/events">Events</LinkButton>
                     </div>
