@@ -12,6 +12,7 @@ import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export default function DailyTimetable()
 {
