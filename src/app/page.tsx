@@ -1,9 +1,11 @@
-import DailyTimetable from "@/app/components/daily_timetable";
 import About from "@/app/components/about";
 import React from "react";
 import {FaArrowDownLong} from "react-icons/fa6";
 import LinkButton from "@/app/components/buttons/linkButton";
 import EventCountdown from "@/app/components/event_countdown";
+
+import dynamic from "next/dynamic";
+const DailyTimetable = dynamic(() => import("@/app/components/daily_timetable"), { ssr: false })
 
 export default function Page() {
   return (

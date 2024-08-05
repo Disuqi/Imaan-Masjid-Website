@@ -1,7 +1,7 @@
 "use client"
 import LinkButton from "@/app/components/buttons/linkButton";
 import { DailyPrayer } from "@/lib/entities/dailyprayer";
-import { getCurrentDate, getDailyPrayers } from "@/lib/prayers";
+import { getDailyPrayers } from "@/lib/prayers";
 import {
     apiFormattedHijriDate,
     formatDateWithSuffix,
@@ -10,9 +10,6 @@ import {
 } from "@/lib/utils/date";
 import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
-
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
 
 export default function DailyTimetable()
 {
