@@ -59,7 +59,7 @@ async function addDailyPrayer(prayersFile) : Promise<void>
             if(row.length < 12 || row[0] == "")
                 continue;
             const day = row[0];
-            const hijri = parseInt(row[1]);
+            const hijri = row[1];
             const fajr_adhan = row[2];
             const fajr_iqama = row[3];
             const sunrise = row[4];
@@ -71,10 +71,15 @@ async function addDailyPrayer(prayersFile) : Promise<void>
             const isha_adhan = row[10];
             const isha_iqama = row[11];
 
-            const date = new Date(year, month, parseInt(day));
+            const date = new Date();
+            date.setTime(0);
+            date.setFullYear(year);
+            date.setMonth(month);
+            date.setDate(parseInt(day));
+
             const prayer : DailyPrayer = {
                 date: date.toISOString(),
-                hijri: hijri, 
+                hijri: parseInt(hijri), 
                 fajr_adhan: fajr_adhan, 
                 fajr_iqama: fajr_iqama,
                 sunrise: sunrise, 
