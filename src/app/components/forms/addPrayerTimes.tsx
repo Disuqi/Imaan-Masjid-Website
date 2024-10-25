@@ -76,11 +76,6 @@ async function addDailyPrayer(prayersFile) : Promise<void>
             date.setFullYear(year);
             date.setMonth(month);
             date.setDate(parseInt(day));
-            console.log("Date: " + date);
-            console.log("Date to ISO: " + date.toISOString());
-            console.log("Asr adhan: " + asr_adhan);
-            console.log("end of row");
-
 
             const prayer : DailyPrayer = {
                 date: date.toISOString(),
