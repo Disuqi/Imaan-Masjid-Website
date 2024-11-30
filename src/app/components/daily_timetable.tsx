@@ -76,8 +76,8 @@ export default function DailyTimetable()
                                         Object.values(SalahType).map((salah) =>
                                         {
                                             let className = "";
-                                            if(salah == highlightedSalah)
-                                                className = "bg-blue-100";
+                                            // if(salah == highlightedSalah)
+                                            //     className = "bg-blue-100";
 
                                             return <tr key={salah} className={className}>
                                                 <td className="pl-4 font-light text-start">{SalahToArabic(salah)}</td>
