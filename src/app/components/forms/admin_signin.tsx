@@ -31,18 +31,20 @@ export default function SignInForm(props: {onSuccessfullSignIn: () => void})
         });
     }
 
-    return <form className="flex flex-col gap-2 justify-center items-start border border-gray-200 p-8" onChange={handleFormChange}>
+    return <form className="flex flex-col gap-8 justify-center items-start border border-gray-200 p-20" onChange={handleFormChange}>
             <h1 className="text-4xl font-bold">Admin Sign In</h1>
-            <div className="flex flex-col">
-                <label className="text-md text-gray-300">Email</label>
-                <input className="p-1 text-sm border border-gray-200 rounded" type="email" name="email"/>
-            </div>
-            <div className="flex flex-col">
-                <label className="text-md text-gray-300">Password</label>
-                <input className="p-1 text-sm border border-gray-200 rounded" type="password" name="password"/>
+            <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full">
+                    <label className="text-md text-primary-200">Email</label>
+                    <input className="p-1 text-sm border border-primary-100 rounded" type="email" name="email"/>
+                </div>
+                <div className="flex flex-col w-full">
+                    <label className="text-md text-primary-200">Password</label>
+                    <input className="p-1 text-sm border border-primary-100 rounded" type="password" name="password"/>
+                </div>
             </div>
             <div className="text-center w-full mt-2">
-                <Button component="div" onClick={signInAdmin}>Sign In</Button>
+                <Button className="bg-primary-100 hover:bg-primary-200 transition duration-150 ease-in-out" component="div" onClick={signInAdmin}>Sign In</Button>
             </div>
         </form>;
 }

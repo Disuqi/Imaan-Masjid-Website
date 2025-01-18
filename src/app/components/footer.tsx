@@ -3,33 +3,33 @@ import Link from "next/link";
 export default function Footer()
 {
     return<>
-        <div id="footer" className="bg-gray-800 pb-20">
-            <div className="container mx-auto flex sm:flex-row flex-col gap-20 justify-center px-10 items-start pt-10 text-blue-200 w-full h-full">
+        <div id="footer" className="bg-bg-200 pb-20 text-text-200">
+            <div className="container mx-auto flex sm:flex-row flex-col gap-20 justify-center px-10 items-start pt-10 w-full h-full">
                 <div className="flex flex-col gap-2">
                     <h1 className="font-bold text-xl lg:text-3xl">About Us</h1>
                     <div className="text-md lg:text-lg flex flex-col gap-2">
-                        <Link href="/#about" className="hover:text-blue-100 transition duration-100 ease-out">About</Link>
-                        <Link href="/events" className="hover:text-blue-100 transition duration-100 ease-out">Events</Link>
-                        <Link href="#footer" className="hover:text-blue-100 transition duration-100 ease-out">Contact</Link>
-                        <Link href="/donate" className="hover:text-blue-100 transition duration-100 ease-out">Donate</Link>
+                        <Link href="/#about" className="hover:text-primary-100 transition duration-100 ease-out">About</Link>
+                        <Link href="/events" className="hover:text-primary-100 transition duration-100 ease-out">Events</Link>
+                        <Link href="#footer" className="hover:text-primary-100 transition duration-100 ease-out">Contact</Link>
+                        <Link href="/donate" className="hover:text-primary-100 transition duration-100 ease-out">Donate</Link>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <h1 className="font-bold text-xl lg:text-3xl">Useful Links</h1>
                     <div className="text-md lg:text-lg flex flex-col gap-2">
-                        <Link href="/timetable" className="hover:text-blue-100 transition duration-100 ease-out">Prayers Timetable</Link>
-                        <Link href="#footer" className="hover:text-blue-100 transition duration-100 ease-out">Counselling Services</Link>
-                        <Link href="#footer" className="hover:text-blue-100 transition duration-100 ease-out">Quran Classes</Link>
-                        <Link href="#footer" className="hover:text-blue-100 transition duration-100 ease-out">Volunteer</Link>
+                        <Link href="/timetable" className="hover:text-primary-100 transition duration-100 ease-out">Prayers Timetable</Link>
+                        <Link href="#footer" className="hover:text-primary-100 transition duration-100 ease-out">Counselling Services</Link>
+                        <Link href="#footer" className="hover:text-primary-100 transition duration-100 ease-out">Quran Classes</Link>
+                        <Link href="#footer" className="hover:text-primary-100 transition duration-100 ease-out">Volunteer</Link>
                         <div className="flex flex-row gap-4 justify-start items-center">
-                            <Link href="https://www.facebook.com/ImaanMasjd/" target="_blank" className="hover:text-blue-100 transition duration-100 ease-out">
+                            <Link href="https://www.facebook.com/ImaanMasjd/" target="_blank" className="hover:text-primary-100 transition duration-100 ease-out">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                      className="w-6 h-6" viewBox="0 0 16 16">
                                     <path
                                         d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
                                 </svg>
                             </Link>
-                            <Link href="https://www.youtube.com/channel/UCXJ70ltpLmkkke_VMyH5uRQ" target="_blank" className="hover:text-blue-100 transition duration-100 ease-out">
+                            <Link href="https://www.youtube.com/channel/UCXJ70ltpLmkkke_VMyH5uRQ" target="_blank" className="hover:text-primary-100 transition duration-100 ease-out">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                      className="h-6 w-6" viewBox="0 0 16 16">
                                     <path

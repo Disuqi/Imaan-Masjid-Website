@@ -45,10 +45,9 @@ export default function Page()
             prayers.length > 0 ?
                 <>
                     <div className="flex flex-col justify-center items-center md:items-start">
-
                         <h1 className="text-3xl font-bold">{getMonth(today)} Timetable</h1>
                         {firstHijriMonth && lastHijriMonth &&
-                            <h1 className="text-3xl font-bold text-gray-300">{firstHijriMonth}/{lastHijriMonth}</h1>}
+                            <h1 className="text-2xl font-medium text-primary-200">{firstHijriMonth}/{lastHijriMonth}</h1>}
                     </div>
                     <div className="my-5 overflow-auto">
                         <Sheet className="min-w-[1000px]">
