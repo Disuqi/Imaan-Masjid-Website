@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Carrois+Gothic&display=swap');
+
+:root {
+    --primary-100: 212, 234, 247;
+    --primary-200: 182, 204, 216;
+    --primary-300: 59, 60, 61;
+    --accent-100: 113, 196, 239;
+    --accent-200: 0, 102, 140;
+    --text-100: 29, 28, 28;
+    --text-200: 49, 61, 68;
+    --bg-100: 255, 254, 251;
+    --bg-200: 245, 244, 241;
+    --bg-300: 204, 203, 200;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-100: 31, 58, 95;
+        --primary-200: 77, 100, 141;
+        --primary-300: 172, 194, 239;
+        --accent-100: 61, 90, 128;
+        --accent-200: 206, 232, 255;
+        --text-100: 255, 255, 255;
+        --text-200: 224, 224, 224;
+        --bg-100: 15, 28, 46;
+        --bg-200: 31, 43, 62;
+        --bg-300: 55, 67, 87;
+    }
+}
+
 .background-animate {
     background-size: 200%;
 

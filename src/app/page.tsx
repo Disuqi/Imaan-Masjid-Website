@@ -15,7 +15,7 @@ export default function Page() {
                   <DailyTimetable/>
               </div>
               <div className="col-span-1 h-full flex justify-center items-center">
-                  <LinkButton href="#about" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
+                  <LinkButton href="#about" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>} className="bg-bg-100 hover:bg-primary-100 text-text-100 transition duration-150 ease-in-out">
                       About Imaan Masjid
                   </LinkButton>
               </div>
