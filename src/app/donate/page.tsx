@@ -14,7 +14,7 @@ export default function Page()
                 <div className="min-h-[80vh] flex flex-col justify-evenly items-center gap-5 w-full">
                     <div className="bg-primary-100 border border-primary-200 py-4 px-6 rounded-md w-full text-center flex flex-col gap-5">
                         <div className="flex flex-col justify-center items-center text-center gap-2">
-                            <h1 className="font-bold text-2xl">Surat Al-Baqarah [2:245]</h1>
+                            <h1 className="font-bold text-2xl text-accent-200">Surat Al-Baqarah [2:245]</h1>
                             <div className="m-2 flex flex-row gap-1 text-3xl justify-center items-center">
                                 <p>مَّن ذَا ٱلَّذِى يُقْرِضُ ٱللَّهَ قَرْضًا حَسَنًۭا فَيُضَـٰعِفَهُۥ لَهُۥٓ أَضْعَافًۭا كَثِيرَةًۭ ۚ
                                     وَٱللَّهُ يَقْبِضُ وَيَبْصُۜطُ وَإِلَيْهِ تُرْجَعُونَ</p>
@@ -26,7 +26,7 @@ export default function Page()
                         </div>
                         <div className="border border-primary-200"></div>
                         <div className="flex flex-col justify-center items-center text-center gap-2">
-                            <h1 className="font-bold text-2xl">Sunan Ibn Majah, Kitab al-Masajid wal Jamaah, Hadith 738</h1>
+                            <h1 className="font-bold text-2xl text-accent-200">Sunan Ibn Majah, Kitab al-Masajid wal Jamaah, Hadith 738</h1>
                             <div className="m-2 flex flex-row gap-1 text-3xl justify-center items-center">
                                 <p>عَنْ جَابِرِ بْنِ عَبْدِ اللہِ، أَنَّ رَسُولَ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ قَالَ، مَنْ بَنَى
                                     مَسْجِدًا لِلهِ كَمَفْحَصِ قَطَاةٍ أَوْ أَصْغَرَ بَنَى اللهُ لَهُ بَيْتًا فِى الْجَنَّةِ</p>
