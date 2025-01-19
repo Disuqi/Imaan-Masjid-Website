@@ -63,7 +63,7 @@ export default function Header()
                                     </div>))}
                                 {adminSignedIn &&
                                     <div>
-                                        <Link href="/admin" className="hover:text-accent-200 transition duration-150 ease-in-out cursor-pointer">Admin Page</Link>
+                                        <Link href="/admin" className="hover:text-accent-200 transition duration-150 ease-in-out cursor-pointer">ADMIN</Link>
                                     </div>}
                                     <Link href="/donate"
                                         className="px-4 py-2 bg-gradient-to-r from-primary-100 via-accent-100 to-accent-200 rounded-md text-white background-animate cursor-pointer hover:brightness-110 transition duration-150 ease-in-out font-semibold">
@@ -80,14 +80,14 @@ export default function Header()
                                         {menuItems.map((item) =>
                                             // eslint-disable-next-line react/jsx-key
                                             (<Link key={item.key} onClick={() => setIsMenuOpen(false)} href={item.link} scroll={true}
-                                                   className="w-full pl-10 py-4 text-xl font-semibold hover:bg-primary-100 transition duration-150 ease-in-out cursor-pointer">
+                                                   className="w-full pl-10 py-4 text-xl font-default font-semibold hover:bg-primary-100 transition duration-150 ease-in-out cursor-pointer">
                                                 {item.title}
                                             </Link>))}
                                         {adminSignedIn && <Link onClick={() => setIsMenuOpen(false)} href={"/admin"} scroll={true}
-                                                                className="w-full pl-10 py-4 text-xl font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
-                                            Admin Page
+                                                                className="w-full pl-10 py-4 text-xl font-default font-semibold hover:bg-blue-100 transition duration-150 ease-in-out cursor-pointer">
+                                            ADMIN
                                         </Link>}
-                                        <Link href="/donate" onClick={() => setIsMenuOpen(false)} className="w-full pl-10 py-4 bg-gradient-to-r from-primary-100 via-accent-100 to-accent-200 text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">Donate</Link>
+                                        <Link href="/donate" onClick={() => setIsMenuOpen(false)} className="w-full font-default pl-10 py-4 bg-gradient-to-r from-primary-100 via-accent-100 to-accent-200 text-white background-animate cursor-pointer text-lg hover:brightness-110 transition duration-150 ease-in-out font-semibold">DONATE</Link>
                                     </div>
                                 </Drawer>
                             </div>
