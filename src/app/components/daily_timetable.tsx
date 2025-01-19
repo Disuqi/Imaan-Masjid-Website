@@ -49,21 +49,17 @@ export default function DailyTimetable()
                                 <table className="text-lg md:text-2xl">
                                     <thead className="text-accent-200">
                                         <tr role="rowheader">
-                                            <th className="w-[15%] pl-4 text-start font-semibold" role="columnheader">صلاة
-                                            </th>
-                                            <th className="w-[15%] text-start font-semibold" role="columnheader">Salah</th>
-                                            <th className="w-[100%] px-4 text-end font-semibold" role="columnheader">Adhan
-                                            </th>
-                                            <th className="w-[100%] pr-4 text-end font-semibold"
-                                                role="columnheader">Iqamah
-                                            </th>
+                                            <th className="w-[15%] pl-4 text-start font-medium" role="columnheader">صلاة</th>
+                                            <th className="w-[15%] text-start font-medium" role="columnheader">Salah</th>
+                                            <th className="w-[100%] px-4 text-end font-medium" role="columnheader">Adhan</th>
+                                            <th className="w-[100%] pr-4 text-end font-medium"role="columnheader">Iqamah</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="text-md md:text-xl text-text-200">
+                                    <tbody className="text-md font-light md:text-xl text-text-200">
                                     {
                                         Object.values(SalahType).map((salah) =>
                                         {
-                                            return <tr key={salah}>
+                                            return <tr key={salah} className="hover:bg-primary-100 transition duration-150 ease-in-out">
                                                 <td className="pl-4 text-start">{SalahToArabic(salah)}</td>
                                                 <td className="text-start">{SalahToEnglish(salah)}</td>
                                                 <td className="px-4 text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
