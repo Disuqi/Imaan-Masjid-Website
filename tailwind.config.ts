@@ -27,8 +27,8 @@ const config: Config = {
       },
     },
     fontFamily: {
+      default: ["Carrois Gothic"],
       logo: ["Abril Fatface"],
-      sublogo: ["Carrois Gothic"]
     }
   },
   plugins: [],

@@ -2,6 +2,7 @@ import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
 import Link from "next/link";
 import img from "next/image";
+import LinkButton from "@/app/components/buttons/linkButton";
 
 export default function Page()
 {
@@ -43,11 +44,9 @@ export default function Page()
                             <br/>
                             Additionally, help the masjid to clear its £142,000 debt and earn Sadaqah Jariyah.</p>
                     </div>
-                    <Link href="#donationDetails">
-                        <Button className="bg-bg-100 hover:bg-primary-100 text-text-200" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>}>
-                            Donate
-                        </Button>
-                    </Link>
+                    <LinkButton href="#donationDetails" variant="plain" size="lg" endDecorator={<FaArrowDownLong/>} className="bg-bg-100 hover:bg-primary-100 text-text-100 transition duration-150 ease-in-out">
+                        Donate
+                    </LinkButton>
                 </div>
                 <div id="donationDetails" className="min-h-[100vh] flex flex-col justify-center items-center w-full">
                     <div>

@@ -34,7 +34,7 @@ export default function DailyTimetable()
                 <div className="m-5">
                     <div className="rounded-t-md bg-bg-200 p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
-                            <h1 className="text-xl md:text-3xl font-bold text-accent-200" suppressHydrationWarning>{formatDateWithSuffix(today)}</h1>
+                            <h1 className="text-xl md:text-3xl font-extrabold text-accent-200" suppressHydrationWarning>{formatDateWithSuffix(today)}</h1>
                             {hijriDate && <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>}
                         </div>
                         <div className="flex justify-center items-center md:w-auto w-[53%]">
@@ -49,21 +49,17 @@ export default function DailyTimetable()
                                 <table className="text-lg md:text-2xl">
                                     <thead className="text-accent-200">
                                         <tr role="rowheader">
-                                            <th className="w-[15%] pl-4 text-start font-semibold" role="columnheader">صلاة
-                                            </th>
-                                            <th className="w-[15%] text-start font-semibold" role="columnheader">Salah</th>
-                                            <th className="w-[100%] px-4 text-end font-semibold" role="columnheader">Adhan
-                                            </th>
-                                            <th className="w-[100%] pr-4 text-end font-semibold"
-                                                role="columnheader">Iqamah
-                                            </th>
+                                            <th className="w-[15%] pl-4 text-start font-thin" role="columnheader">صلاة</th>
+                                            <th className="w-[15%] text-start font-bold" role="columnheader">Salah</th>
+                                            <th className="w-[100%] px-4 text-end font-bold" role="columnheader">Adhan</th>
+                                            <th className="w-[100%] pr-4 text-end font-bold"role="columnheader">Iqamah</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="text-md md:text-xl text-text-200">
+                                    <tbody className="text-md font-light md:text-xl text-text-200">
                                     {
                                         Object.values(SalahType).map((salah) =>
                                         {
-                                            return <tr key={salah}>
+                                            return <tr key={salah} className="hover:bg-primary-100 transition duration-150 ease-in-out">
                                                 <td className="pl-4 text-start">{SalahToArabic(salah)}</td>
                                                 <td className="text-start">{SalahToEnglish(salah)}</td>
                                                 <td className="px-4 text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
