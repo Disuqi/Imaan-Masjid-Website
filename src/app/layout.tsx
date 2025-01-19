@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body id="rootEl" className={inter.className + " min-h-screen bg-bg-100 text-text-100"}>
+      <body id="rootEl" className={inter.className + " min-h-screen bg-bg-100 text-text-100 font-default"}>
         <Header/>
         <div className="relative">
             {children}

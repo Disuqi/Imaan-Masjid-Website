@@ -44,7 +44,7 @@ export default function Page()
         {
             prayers.length > 0 ?
                 <>
-                    <div className="flex flex-col justify-center items-center md:items-start">
+                    <div className="flex flex-col justify-center items-center md:items-start font-default">
                         <h1 className="text-3xl font-bold">{getMonth(today)} Timetable</h1>
                         {firstHijriMonth && lastHijriMonth &&
                             <h1 className="text-2xl font-medium text-primary-200">{firstHijriMonth}/{lastHijriMonth}</h1>}
@@ -58,7 +58,7 @@ export default function Page()
                                 variant="soft"
                                 hoverRow>
                                 <thead>
-                                <tr>
+                                <tr className="font-default">
                                     <th colSpan={3}>Date</th>
                                     <th colSpan={3}>{SalahToEnglish(SalahType.Fajr)}</th>
                                     <th colSpan={2}>{SalahToEnglish(SalahType.Dhuhr)}</th>
@@ -67,7 +67,7 @@ export default function Page()
                                     <th colSpan={1}>{SalahToEnglish(SalahType.Mughrib)}</th>
                                     <th colSpan={2}>{SalahToEnglish(SalahType.Isha)}</th>
                                 </tr>
-                                <tr>
+                                <tr className="font-default">
                                     <th>Gregorian</th>
                                     <th>Hijri</th>
                                     <th>Day</th>
@@ -87,7 +87,7 @@ export default function Page()
                                 {
                                     prayers.map((prayer, i) => {
                                         const date = new Date(prayer.date);
-                                        return <tr key={"prayer_time_" + i}>
+                                        return <tr key={"prayer_time_" + i} className="font-default">
                                                 <td>{date.getDate()}</td>
                                                 <td>{prayer.hijri}</td>
                                                 <td>{date.toLocaleDateString('en-US', {weekday: 'short'})}</td>

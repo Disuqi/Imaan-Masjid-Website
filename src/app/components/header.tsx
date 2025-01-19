@@ -12,10 +12,10 @@ export default function Header()
 {
     const menuItems =
         [
-            { key:0, title: "Full Timetable", link: "/timetable"},
-            { key:1, title: "Home", link: "/"},
-            { key:2, title: "Events", link: "/events"},
-            { key:3, title: "About", link: "/#about"},
+            { key:0, title: "FULL TIMETABLE", link: "/timetable"},
+            { key:1, title: "HOME", link: "/"},
+            { key:2, title: "EVENTS", link: "/events"},
+            { key:3, title: "ABOUT", link: "/#about"},
         ];
 
     const [currentScreenSize, setCurrentScreenSize] = useState<ScreenSize>(null);
@@ -54,7 +54,7 @@ export default function Header()
                     <>
                         {
                             currentScreenSize > ScreenSize.md ?
-                            <div className="flex flex-row gap-12 font-bold text-lg justify-center items-center mx-auto md:mx-0 md:ml-auto">
+                            <div className="font-black flex flex-row gap-12 text-lg justify-center items-center mx-auto md:mx-0 md:ml-auto">
                                 {menuItems.map((item) =>
                                     // eslint-disable-next-line react/jsx-key
                                     (<div key={item.key}>
@@ -67,7 +67,7 @@ export default function Header()
                                     </div>}
                                     <Link href="/donate"
                                         className="px-4 py-2 bg-gradient-to-r from-primary-100 via-accent-100 to-accent-200 rounded-md text-white background-animate cursor-pointer hover:brightness-110 transition duration-150 ease-in-out font-semibold">
-                                        Donate
+                                        DONATE
                                     </Link>
                             </div>
                             :

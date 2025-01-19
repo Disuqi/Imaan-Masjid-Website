@@ -7,7 +7,14 @@ export default function LinkButton(props: {href : string, className?: string, si
     let className = props.className;
     if (className == null)
     {
-        className = "bg-primary-100 text-text-100 hover:bg-primary-200 hover:text-text-200 transition duration-150 ease-in-out";
+        className = "bg-primary-100 text-text-100 hover:bg-primary-200 hover:text-text-200 transition duration-150 ease-in-out font-default";
+    }else
+    {
+        let result = className.match("font");
+        if (result == null || result.length == 0)
+        {
+            className += " font-default";
+        }
     }
     return <Button variant={props.variant} size={props.size} component="div" endDecorator={props.endDecorator} className={className}>
         <Link href={props.href}>
