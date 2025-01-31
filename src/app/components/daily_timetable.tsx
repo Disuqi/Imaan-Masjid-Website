@@ -31,6 +31,9 @@ export default function DailyTimetable()
     }, []);
 
     return <div className="h-[60vh]">
+            <div className="absolute top-0 left-0 -z-10 h-[60vh] w-full">
+                <Image src="/salah (4).jpg" alt="picture of man prostrating" width="3840" height="2160" className="w-full h-full object-cover"/>
+            </div>
             <div className="container mx-auto w-full h-full flex flex-col justify-center items-end z-10">
                 <div className="m-5">
                     <div className="rounded-t-md bg-bg-200 p-6 flex flex-row justify-between gap-5 md:gap-20">
@@ -80,9 +83,6 @@ export default function DailyTimetable()
                         }
                     </div>
                 </div>
-            </div>
-            <div className="absolute top-0 left-0 -z-10">
-                <Image src="/salah (4).jpg" alt="picture of man prostrating" width="1920" height="1080"/>
             </div>
         </div>;
 }
