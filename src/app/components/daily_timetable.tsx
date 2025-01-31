@@ -47,7 +47,7 @@ export default function DailyTimetable()
                             </LinkButton>
                         </div>
                     </div>
-                    <div className="rounded-b-md bg-bg-100 py-2 z-10">
+                    <div className="rounded-b-md bg-bg-100 py-2">
                         {
                             dailyPrayers ?
                                 <table className="text-lg md:text-2xl">
