@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: 'Carrois Gothic', sans-serif;
+  }
+  
 :root {
     --primary-100: 212, 234, 247;
     --primary-200: 182, 204, 216;
