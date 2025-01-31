@@ -11,7 +11,6 @@ import {
 } from "@/lib/utils/date";
 import {SalahToArabic, SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {useEffect, useState} from "react";
-import LoadingAnimation from "./elements/loading";
 
 export default function DailyTimetable()
 {

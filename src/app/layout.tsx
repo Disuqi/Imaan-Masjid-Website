@@ -4,6 +4,7 @@ import './globals.css'
 import Footer from "@/app/components/footer";
 import Header from "@/app/components/header";
 import '@fontsource/carrois-gothic';
+import '@fontsource/abril-fatface';
 
 const inter = Inter({ subsets: ['latin'] })
 
