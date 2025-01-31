@@ -1,5 +1,6 @@
 "use client"
 import LinkButton from "@/app/components/buttons/linkButton";
+import Image from "next/image";
 import { DailyPrayer } from "@/lib/entities/dailyprayer";
 import { getDailyPrayers } from "@/lib/prayers";
 import {
@@ -29,8 +30,11 @@ export default function DailyTimetable()
         apiFormattedHijriDate(today).then((result) => setHijriDate(result));
     }, []);
 
-    return <div className="h-[60vh] bg-[url('/salah%20(4).jpg')] bg-cover">
-            <div className="container mx-auto w-full h-full flex flex-col justify-center items-end">
+    return <div className="h-[60vh]">
+            <div className="absolute top-0 left-0 -z-10 h-[60vh] w-full">
+                <Image src="/salah (4).jpg" alt="picture of man prostrating" width="3840" height="2160" className="w-full h-full object-cover"/>
+            </div>
+            <div className="container mx-auto w-full h-full flex flex-col justify-center items-end z-10">
                 <div className="m-5">
                     <div className="rounded-t-md bg-bg-200 p-6 flex flex-row justify-between gap-5 md:gap-20">
                         <div className="flex flex-col">
@@ -80,5 +84,5 @@ export default function DailyTimetable()
                     </div>
                 </div>
             </div>
-    </div>;
+        </div>;
 }
