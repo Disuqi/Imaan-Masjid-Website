@@ -18,6 +18,7 @@ export default function Page()
     const [prayers, setPrayers] = useState<DailyPrayer[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
+    const [showEidSalah, setShowEidSalah] = useState(false);
     const today = new Date();
 
     useEffect(() =>
@@ -28,7 +29,6 @@ export default function Page()
 
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
-        console.log(lastDate.toISOString());
 
         getPrayers(firstDate, lastDate).then((result) =>
         {    
@@ -37,6 +37,11 @@ export default function Page()
         });
         apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
         apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
+
+        if (today.getMonth() <= 6 && today.getDate() <= 6 && today.getFullYear() === 2025) 
+        {
+            setShowEidSalah(true);
+        }
     }, []);
 
     return <div className="mx-auto container m-5 max-w-vw relative">
@@ -50,6 +55,9 @@ export default function Page()
                             <h1 className="text-2xl font-medium text-primary-200">{firstHijriMonth}/{lastHijriMonth}</h1>}
                     </div>
                     <div className="my-5 overflow-auto">
+                        {showEidSalah &&
+                            <h2 className="text-xl font-light text-primary-300">Eid Salah - 06/06/25 9:00am</h2>
+                        }
                         <Sheet className="min-w-[1000px]">
                             <Table
                                 borderAxis="bothBetween"
