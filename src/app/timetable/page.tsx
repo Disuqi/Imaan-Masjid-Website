@@ -58,8 +58,9 @@ export default function Page()
                         {showEidSalah &&
                             <h2 className="text-xl font-light text-primary-300">Eid Salah - 06/06/25 9:00am</h2>
                         }
-                        <Sheet className="min-w-[1000px]">
+                        <Sheet className="min-w-[1000px] timetable-sheet">
                             <Table
+                                className="timetable-table"
                                 borderAxis="bothBetween"
                                 color="neutral"
                                 size="md"

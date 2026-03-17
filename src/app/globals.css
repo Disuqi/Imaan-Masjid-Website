@@ -33,6 +33,31 @@
         --bg-200: 31, 43, 62;
         --bg-300: 55, 67, 87;
     }
+
+    .timetable-sheet {
+        background-color: rgb(var(--bg-200)) !important;
+        border-color: rgb(var(--bg-300)) !important;
+    }
+
+    .timetable-table {
+        background-color: rgb(var(--bg-200)) !important;
+        color: rgb(var(--text-100)) !important;
+    }
+
+    .timetable-table th {
+        background-color: rgb(var(--bg-300)) !important;
+        color: rgb(var(--text-100)) !important;
+        border-color: rgb(var(--bg-100)) !important;
+    }
+
+    .timetable-table td {
+        border-color: rgb(var(--bg-100)) !important;
+        color: rgb(var(--text-100)) !important;
+    }
+
+    .timetable-table tbody tr:hover, .timetable-table tbody tr:hover td {
+        background-color: rgb(var(--bg-300)) !important;
+    }
 }
 
 .background-animate {
