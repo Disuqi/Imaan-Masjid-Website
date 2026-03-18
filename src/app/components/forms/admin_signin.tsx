@@ -36,11 +36,11 @@ export default function SignInForm(props: {onSuccessfullSignIn: () => void})
             <div className="flex flex-col w-full">
                 <div className="flex flex-col w-full">
                     <label className="text-md text-primary-200">Email</label>
-                    <input className="p-1 text-sm border border-primary-100 rounded" type="email" name="email"/>
+                    <input className="p-1 text-sm border border-primary-100 rounded text-black" type="email" name="email"/>
                 </div>
                 <div className="flex flex-col w-full">
                     <label className="text-md text-primary-200">Password</label>
-                    <input className="p-1 text-sm border border-primary-100 rounded" type="password" name="password"/>
+                    <input className="p-1 text-sm border border-primary-100 rounded text-black" type="password" name="password"/>
                 </div>
             </div>
             <div className="text-center w-full mt-2">

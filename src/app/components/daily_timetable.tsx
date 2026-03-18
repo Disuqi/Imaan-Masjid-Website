@@ -72,8 +72,8 @@ export default function DailyTimetable() {
         return null;
 
     return <div className="container mx-auto w-full h-full flex flex-col justify-center items-end z-10">
-            <div className="m-5">
-                <div className="rounded-t-md bg-bg-200 py-6 px-8 flex flex-row justify-between gap-5 md:gap-20">
+            <div className="m-2 md:m-5 shadow-xl">
+                <div className="rounded-t-md bg-bg-200 py-3 px-4 md:py-6 md:px-8 flex flex-row justify-between gap-5 md:gap-20">
                     <div className="flex flex-col">
                         <h1 className="text-xl md:text-3xl font-extrabold text-accent-200">{formatDateWithSuffix(today)}</h1>
                         {hijriDate && <h4 className="text-md font-light md:text-xl">{hijriDate}</h4>}
@@ -84,16 +84,16 @@ export default function DailyTimetable() {
                         </LinkButton>
                     </div>
                 </div>
-                <div className="rounded-b-md bg-bg-100 py-8">
+                <div className="rounded-b-md bg-bg-100 py-4 md:py-8">
                     {
                         dailyPrayers ?
                             <table className="text-lg md:text-2xl w-full">
                                 <thead className="text-accent-200">
                                     <tr role="rowheader">
-                                        <th className="w-[15%] pl-8 text-end font-thin" role="columnheader">صلاة</th>
-                                        <th className="w-[15%] pl-5 text-start font-bold" role="columnheader">Salah</th>
-                                        <th className="w-[100%] pr-5 text-end font-bold" role="columnheader">Adhan</th>
-                                        <th className="w-[100%] pr-8 text-start font-bold" role="columnheader">Iqamah</th>
+                                        <th className="w-[15%] pl-3 md:pl-8 text-end font-thin" role="columnheader">صلاة</th>
+                                        <th className="w-[15%] pl-2 md:pl-5 text-start font-bold" role="columnheader">Salah</th>
+                                        <th className="w-[100%] pr-2 md:pr-5 text-end font-bold" role="columnheader">Adhan</th>
+                                        <th className="w-[100%] pr-3 md:pr-8 text-start font-bold" role="columnheader">Iqamah</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-md font-light md:text-xl text-text-200">
@@ -101,10 +101,10 @@ export default function DailyTimetable() {
                                         Object.values(SalahType).map((salah) => {
                                             const isUpcoming = salah === upcomingSalah;
                                             return <tr key={salah} className={`hover:bg-primary-100 transition duration-150 ease-in-out ${isUpcoming ? 'bg-primary-100/30 border-l-4 border-accent-200 font-semibold' : ''}`}>
-                                                <td className="py-2 pl-8 text-end">{SalahToArabic(salah)}</td>
-                                                <td className="py-2 pl-5 text-start">{SalahToEnglish(salah)}</td>
-                                                <td className="py-2 pr-5 text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
-                                                <td className="py-2 pr-8 text-start">{salah == SalahType.Mughrib ? formatSupabaseTime(dailyPrayers[salah + "_adhan"]) : formatSupabaseTime(dailyPrayers[salah + "_iqama"])}</td>
+                                                <td className="py-2 pl-3 md:pl-8 text-end">{SalahToArabic(salah)}</td>
+                                                <td className="py-2 pl-2 md:pl-5 text-start">{SalahToEnglish(salah)}</td>
+                                                <td className="py-2 pr-2 md:pr-5 text-end">{formatSupabaseTime(dailyPrayers[salah + "_adhan"])}</td>
+                                                <td className="py-2 pr-3 md:pr-8 text-start">{salah == SalahType.Mughrib ? formatSupabaseTime(dailyPrayers[salah + "_adhan"]) : formatSupabaseTime(dailyPrayers[salah + "_iqama"])}</td>
                                             </tr>
                                         })
                                     }
