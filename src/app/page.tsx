@@ -9,7 +9,7 @@ const DailyTimetable = dynamic(() => import("@/app/components/daily_timetable"),
 export default function Page() {
   return (
       <main className="flex flex-col">
-          <div className="h-[100dvh] flex flex-col">
+          <div className="h-[100vh] flex flex-col">
               <div className="min-h-[60%] relative">
                     <DailyTimetable/>
                     <div className="absolute h-full w-full top-0 left-0 -z-10 bg-[url(/pattern.png)] bg-contain dark:invert dark:opacity-80"></div>
