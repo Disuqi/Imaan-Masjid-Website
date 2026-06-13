@@ -1,19 +1,17 @@
-import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
-import Link from "next/link";
-import img from "next/image";
 import LinkButton from "@/app/components/buttons/linkButton";
+import Reveal from "@/app/components/elements/reveal";
 
 export default function Page()
 {
     return <>
         <div className="w-full mb-10">
-            <h1 className="bg-accent-100 py-4 px-6 font-bold text-white text-3xl text-center">MASJID URGENT APPEAL</h1>
+            <h1 className="bg-accent-100 py-4 px-6 font-bold text-white text-3xl text-center animate-fade-in">MASJID URGENT APPEAL</h1>
         </div>
         <div className="container mx-auto w-full h-full flex justify-center items-center">
             <div className="md:mx-20 mx-10 flex flex-col justify-center items-center">
                 <div className="min-h-[80vh] flex flex-col justify-evenly items-center gap-5 w-full">
-                    <div className="bg-primary-100 border border-primary-200 py-4 px-6 rounded-md w-full text-center flex flex-col gap-5">
+                    <Reveal className="bg-primary-100 border border-primary-200 py-4 px-6 rounded-md w-full text-center flex flex-col gap-5 shadow-lg">
                         <div className="flex flex-col justify-center items-center text-center gap-2">
                             <h1 className="font-bold text-2xl text-accent-200">Surat Al-Baqarah [2:245]</h1>
                             <div className="m-2 flex flex-row gap-1 text-3xl justify-center items-center">
@@ -37,7 +35,7 @@ export default function Page()
                                 will build for him a house in Paradise.
                             </p>
                         </div>
-                    </div>
+                    </Reveal>
                     <div className="text-lg">
                         <p>Please help the masjid towards running costs such as gas and electricity. Also, the masjid needs your
                             support to organise conferences and events to gain beneficial knowledge.
@@ -49,26 +47,26 @@ export default function Page()
                     </LinkButton>
                 </div>
                 <div id="donationDetails" className="min-h-[100vh] flex flex-col justify-center items-center w-full">
-                    <div>
-                        <div className="flex md:flex-row md:justify-center md:items-center flex-col gap-10 text-xl font-bold mt-10 w-full justify-start items-start">
-                            <div className="flex flex-row justify-center items-center gap-2">
-                                <h1 className="font-black text-3xl m-2">1.</h1>
+                    <Reveal>
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-6 text-xl font-bold mt-10 w-full">
+                            <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h1 className="font-black text-3xl m-2 text-accent-200">1.</h1>
                                 <h1 className="w-full">£350 Per Prayer Mat</h1>
-                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="payer rug image"/>
+                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="prayer rug"/>
                             </div>
-                            <div className="flex flex-row justify-center items-center gap-2">
-                                <h1 className="font-black text-3xl m-2">2.</h1>
+                            <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h1 className="font-black text-3xl m-2 text-accent-200">2.</h1>
                                 <h1 className="w-full">£50 Per Brick</h1>
-                                <img className="w-full h-24 object-contain" src="/wall.png" alt="wall image"/>
+                                <img className="w-full h-24 object-contain" src="/wall.png" alt="brick wall"/>
                             </div>
-                            <div className="flex flex-row justify-center items-center gap-2">
-                                <h1 className="font-black text-3xl m-2">3.</h1>
+                            <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h1 className="font-black text-3xl m-2 text-accent-200">3.</h1>
                                 <h1 className="w-full">Long Term Loan</h1>
-                                <img className="w-full h-28 object-contain" src="/loan.png" alt="money image"/>
+                                <img className="w-full h-28 object-contain" src="/loan.png" alt="money"/>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex flex-col gap-2 m-10 justify-center items-start">
+                    </Reveal>
+                    <Reveal className="flex flex-col gap-2 m-10 justify-center items-start bg-bg-200 border border-bg-300 rounded-xl p-8 shadow-md">
                         <h1 className="font-black text-3xl">Bank Details</h1>
                         <div className="font-bold text-xl">
                             <h1>Lloyds Bank</h1>
@@ -82,7 +80,7 @@ export default function Page()
                                 <p className="font-medium">30-91-97</p>
                             </div>
                         </div>
-                    </div>
+                    </Reveal>
                 </div>
             </div>
         </div>
