@@ -49,12 +49,12 @@ export default function Page()
         {
             prayers.length > 0 ?
                 <>
-                    <div className="flex flex-col justify-center items-center md:items-start font-default">
+                    <div className="flex flex-col justify-center items-center md:items-start font-default animate-fade-in">
                         <h1 className="text-3xl font-bold">{getMonth(today)} Timetable</h1>
                         {firstHijriMonth && lastHijriMonth &&
                             <h1 className="text-2xl font-medium text-primary-200">{firstHijriMonth}/{lastHijriMonth}</h1>}
                     </div>
-                    <div className="my-5 overflow-auto">
+                    <div className="my-5 overflow-auto animate-fade-up">
                         {showEidSalah &&
                             <h2 className="text-xl font-light text-primary-300">Eid Salah - 06/06/25 9:00am</h2>
                         }

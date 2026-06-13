@@ -63,11 +63,11 @@ export default function Page() {
             {
                 events?.length > 0 ?
                     <div className="flex flex-col justify-start items-center">
-                        <h1 className="text-3xl font-bold mt-10">Upcoming Events</h1>
+                        <h1 className="text-3xl font-bold mt-10 animate-fade-in">Upcoming Events</h1>
                         <div className="flex flex-row gap-10 flex-wrap m-10">
                             {events.map((event) =>
                                     // eslint-disable-next-line react/jsx-key
-                                    <div key={titleToId(event.title)}>
+                                    <div key={titleToId(event.title)} className="animate-fade-up transition-transform duration-300 hover:-translate-y-1">
                                         <Card variant="outlined" sx={{width: "24rem"}}>
                                             {event.imageUrl &&
                                                 <CardOverflow>

@@ -6,7 +6,7 @@ import ImaanMasjidLogo from "./logo";
 export default function About()
 {
     return <div className="container mx-auto flex justify-center items-center mb-20">
-            <div className="bg-gradient-to-r from-primary-200 to-primary-100 flex flex-col items-center justify-center xl:flex-row xl:justify-evenly xl:items-end w-full m-10 xl:mx-20 relative rounded-lg">
+            <div className="bg-gradient-to-r from-primary-200 to-primary-100 flex flex-col items-center justify-center xl:flex-row xl:justify-evenly xl:items-end w-full m-10 xl:mx-20 relative rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
                 <div className="xl:w-1/2 xl:-translate-y-20 xl:mt-0 mt-[5%] w-[90%]">
                     <AspectRatio sx={{width: "100%", backgroundColor: "rgba(0, 0, 0, 0)", borderRadius: "0.5rem"}}>
                             <iframe width="100%" height="100%" src="https://www.youtube.com/embed/6OnyXVlp6Og?si=_zGpYjOiBYLy-0JK"

@@ -72,7 +72,7 @@ export default function DailyTimetable() {
         return null;
 
     return <div className="container mx-auto w-full h-full flex flex-col justify-center items-end z-10">
-            <div className="m-2 md:m-5 shadow-xl">
+            <div className="m-2 md:m-5 shadow-xl rounded-xl overflow-hidden animate-scale-in transition-shadow duration-300 hover:shadow-2xl">
                 <div className="rounded-t-md bg-bg-200 py-3 px-4 md:py-6 md:px-8 flex flex-row justify-between gap-5 md:gap-20">
                     <div className="flex flex-col">
                         <h1 className="text-xl md:text-3xl font-extrabold text-accent-200">{formatDateWithSuffix(today)}</h1>
