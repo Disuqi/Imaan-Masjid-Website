@@ -20,7 +20,7 @@ export default function Page() {
                   </LinkButton>
               </div>
           </div>
-          <section id="about" className="h-[100dvh] flex justify-center items-center">
+          <section id="about" className="min-h-[100dvh] flex justify-center items-center py-10">
               <About/>
           </section>
       </main>

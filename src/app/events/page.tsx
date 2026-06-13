@@ -28,7 +28,8 @@ export default function Page() {
         });
         getUser().then((response) =>
         {
-            setAdminSignedIn(true);
+            if(response)
+                setAdminSignedIn(true);
         });
     }, []);
 

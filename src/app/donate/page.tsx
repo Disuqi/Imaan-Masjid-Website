@@ -1,7 +1,4 @@
-import {Button} from "@mui/joy";
 import {FaArrowDownLong} from "react-icons/fa6";
-import Link from "next/link";
-import img from "next/image";
 import LinkButton from "@/app/components/buttons/linkButton";
 
 export default function Page()
@@ -54,7 +51,7 @@ export default function Page()
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <h1 className="font-black text-3xl m-2">1.</h1>
                                 <h1 className="w-full">£350 Per Prayer Mat</h1>
-                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="payer rug image"/>
+                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="prayer rug"/>
                             </div>
                             <div className="flex flex-row justify-center items-center gap-2">
                                 <h1 className="font-black text-3xl m-2">2.</h1>
