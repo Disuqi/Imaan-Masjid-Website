@@ -253,6 +253,23 @@ Rules:
  */
 export async function convertTimetablePdf(formData: FormData) : Promise<TimetableConversion>
 {
+    // A Server Action that throws reaches the browser as Next's generic
+    // "unexpected response from the server", which tells the admin nothing. This
+    // action therefore always resolves with a message it chose itself.
+    try
+    {
+        return await convertTimetable(formData);
+    }
+    catch (error)
+    {
+        const detail = describeCause(error);
+        console.error("Unhandled failure while converting the timetable: " + detail);
+        return { error: `The timetable could not be converted: ${detail}` };
+    }
+}
+
+async function convertTimetable(formData: FormData) : Promise<TimetableConversion>
+{
     // Gated like any other admin action — this spends API quota.
     const supabase = await createAdminSupabaseClient();
     if(supabase == null)
@@ -308,6 +325,7 @@ export async function convertTimetablePdf(formData: FormData) : Promise<Timetabl
     for(const model of models)
     {
         attempted++;
+        console.log(`Reading the timetable with ${model} (attempt ${attempted} of ${models.length})…`);
         try
         {
             const interaction = await ai.interactions.create({

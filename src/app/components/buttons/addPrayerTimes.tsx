@@ -20,7 +20,7 @@ export default function AddPrayerTimesBtn()
             open={modalState}
             wide
             title="Add Prayer Times"
-            description="Upload one month at a time. A PDF is read automatically; a CSV needs a month/year header row."
+            description="Upload one month at a time. A PDF is read for you; a CSV is used as-is and needs a month/year header row."
             loading={loadingText != null}
             loadingText={loadingText}
             onClose={() => setModalState(false)}>

@@ -6,12 +6,15 @@ import {addPrayers, getPrayers, removePrayerTimes, replacePrayerTimes} from "@/l
 import {convertTimetablePdf} from "@/lib/timetable_pdf";
 import {
     buildTimetable,
+    csvFilename,
     monthEnd,
     monthStart,
     ParsedTimetable,
     parseMonthYearString,
     TIMETABLE_COLUMN_COUNT,
-    TimetableRow
+    TimetableRow,
+    toCsv,
+    withEditedTime
 } from "@/lib/utils/timetable";
 import {BsFiletypeCsv, BsFiletypePdf} from "react-icons/bs";
 import TimetableCompare from "@/app/components/forms/timetableCompare";
@@ -19,7 +22,7 @@ import {DailyPrayer} from "@/lib/entities/dailyprayer";
 import {describeError} from "@/lib/utils/errors";
 import {checkUploadSize, formatBytes, MAX_UPLOAD_BYTES} from "@/lib/utils/upload";
 import {rasterizePdf} from "@/lib/utils/compress";
-import {IoSparkles} from "react-icons/io5";
+import {IoDownloadOutline, IoPencilOutline, IoSparkles} from "react-icons/io5";
 
 // Rows are sent in small batches so the upload is a handful of round-trips
 // instead of one per day, while still reporting progress as it goes.
@@ -251,7 +254,8 @@ export default function AddPrayerTimesForm(props: {
                              onCancel={startOver}/>
 
     if(parsed != null)
-        return <ReviewStep timetable={parsed} busy={busy} onConfirm={onConfirm} onStartOver={startOver}/>
+        return <ReviewStep timetable={parsed} busy={busy} onConfirm={onConfirm} onStartOver={startOver}
+                           onEdited={setParsed}/>
 
     return <div className="flex flex-col gap-4">
         <label htmlFor="prayer_times_file"
@@ -267,7 +271,7 @@ export default function AddPrayerTimesForm(props: {
                 {file ?
                     "Click again to pick a different file"
                     :
-                    `PDFs are read automatically. CSVs need a month/year header row, e.g. Aug-25. Max ${formatBytes(MAX_UPLOAD_BYTES)}.`}
+                    `A PDF is read for you automatically. A CSV is used as-is and needs a month/year header row, e.g. Aug-25. Max ${formatBytes(MAX_UPLOAD_BYTES)}.`}
             </span>
         </label>
         <input ref={inputRef} onChange={handleInputChange} className="hidden"
@@ -319,10 +323,35 @@ function ConflictStep(props: {
     </div>
 }
 
-function ReviewStep(props: {timetable: ParsedTimetable, busy: boolean, onConfirm: () => void, onStartOver: () => void})
+function ReviewStep(props: {
+    timetable: ParsedTimetable,
+    busy: boolean,
+    onConfirm: () => void,
+    onStartOver: () => void,
+    onEdited: (timetable: ParsedTimetable) => void
+})
 {
     const {timetable} = props;
+    const [editing, setEditing] = useState(false);
     const incomplete = timetable.prayers.filter(hasMissingTime).length;
+
+    const edit = (date: string, field: string, value: string) =>
+        props.onEdited(withEditedTime(timetable, date, field, value));
+
+    const exportCsv = () =>
+    {
+        // Same shape the CSV importer reads, so an exported file can be edited
+        // in a spreadsheet and uploaded again.
+        const url = URL.createObjectURL(new Blob([toCsv(timetable)], {type: "text/csv;charset=utf-8"}));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = csvFilename(timetable);
+        link.click();
+        // Revoked on a later tick: revoking immediately after click() can pull
+        // the blob away before the browser has finished reading it.
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast.success("Timetable exported");
+    };
 
     return <div className="flex flex-col gap-3">
         <div className="flex flex-row flex-wrap gap-2 justify-between items-baseline">
@@ -331,12 +360,29 @@ function ReviewStep(props: {timetable: ParsedTimetable, busy: boolean, onConfirm
         </div>
 
         <p className="text-sm text-text-200">
-            Check these against the original before saving — especially the iqama times.
+            {editing ?
+                "Type over any time that was read wrongly. Changes are kept until you save."
+                :
+                "Check these against the original before saving — especially the iqama times."}
         </p>
         {incomplete > 0 &&
             <p className="text-sm p-2 rounded-md bg-amber-500/15 border border-amber-500/40 text-text-100">
                 {incomplete} {incomplete == 1 ? "day is" : "days are"} missing at least one time.
             </p>}
+
+        <div className="flex flex-row flex-wrap gap-2">
+            <Button component="div" size="sm" variant={editing ? "solid" : "outlined"} color="neutral"
+                    startDecorator={<IoPencilOutline/>} disabled={props.busy}
+                    onClick={() => setEditing(!editing)}
+                    className={editing ? "!bg-accent-100 !text-white" : "!border-bg-300 !text-text-100 hover:!bg-bg-200"}>
+                {editing ? "Done editing" : "Edit"}
+            </Button>
+            <Button component="div" size="sm" variant="outlined" color="neutral"
+                    startDecorator={<IoDownloadOutline/>} disabled={props.busy} onClick={exportCsv}
+                    className="!border-bg-300 !text-text-100 hover:!bg-bg-200">
+                Export CSV
+            </Button>
+        </div>
 
         <div className="max-h-[45vh] overflow-auto border border-bg-300 rounded-md">
             <table className="w-full text-xs text-left border-collapse">
@@ -355,12 +401,12 @@ function ReviewStep(props: {timetable: ParsedTimetable, busy: boolean, onConfirm
                     {timetable.prayers.map((prayer) =>
                         <tr key={prayer.date} className="border-t border-bg-300">
                             <td className="p-2 font-semibold">{new Date(prayer.date).getUTCDate()}</td>
-                            <Cell adhan={prayer.fajr_adhan} iqama={prayer.fajr_iqama}/>
-                            <Cell adhan={prayer.sunrise}/>
-                            <Cell adhan={prayer.dhuhr_adhan} iqama={prayer.dhuhr_iqama}/>
-                            <Cell adhan={prayer.asr_adhan} iqama={prayer.asr_iqama}/>
-                            <Cell adhan={prayer.mughrib_adhan}/>
-                            <Cell adhan={prayer.isha_adhan} iqama={prayer.isha_iqama}/>
+                            <Cell prayer={prayer} adhanField="fajr_adhan" iqamaField="fajr_iqama" editing={editing} onEdit={edit}/>
+                            <Cell prayer={prayer} adhanField="sunrise" editing={editing} onEdit={edit}/>
+                            <Cell prayer={prayer} adhanField="dhuhr_adhan" iqamaField="dhuhr_iqama" editing={editing} onEdit={edit}/>
+                            <Cell prayer={prayer} adhanField="asr_adhan" iqamaField="asr_iqama" editing={editing} onEdit={edit}/>
+                            <Cell prayer={prayer} adhanField="mughrib_adhan" editing={editing} onEdit={edit}/>
+                            <Cell prayer={prayer} adhanField="isha_adhan" iqamaField="isha_iqama" editing={editing} onEdit={edit}/>
                         </tr>)}
                 </tbody>
             </table>
@@ -378,13 +424,46 @@ function ReviewStep(props: {timetable: ParsedTimetable, busy: boolean, onConfirm
     </div>
 }
 
-function Cell(props: {adhan: string, iqama?: string})
+function Cell(props: {
+    prayer: DailyPrayer,
+    adhanField: string,
+    iqamaField?: string,
+    editing: boolean,
+    onEdit: (date: string, field: string, value: string) => void
+})
 {
+    const adhan = props.prayer[props.adhanField];
+    const iqama = props.iqamaField == null ? undefined : props.prayer[props.iqamaField];
+
+    if(props.editing)
+    {
+        return <td className="p-1 whitespace-nowrap">
+            <div className="flex flex-row gap-1">
+                <TimeInput value={adhan} onChange={(v) => props.onEdit(props.prayer.date, props.adhanField, v)}/>
+                {props.iqamaField != null &&
+                    <TimeInput value={iqama} onChange={(v) => props.onEdit(props.prayer.date, props.iqamaField, v)}/>}
+            </div>
+        </td>
+    }
+
     return <td className="p-2 whitespace-nowrap">
-        <span className={props.adhan ? "" : "text-red-400"}>{props.adhan || "—"}</span>
-        {props.iqama !== undefined &&
-            <span className="opacity-60"> ({props.iqama || "—"})</span>}
+        <span className={adhan ? "" : "text-red-400"}>{adhan || "—"}</span>
+        {props.iqamaField != null &&
+            <span className="opacity-60"> ({iqama || "—"})</span>}
     </td>
+}
+
+function TimeInput(props: {value: string, onChange: (value: string) => void})
+{
+    // A plain text input rather than type="time": the stored values follow the
+    // printed timetable's 12-hour convention, which a time picker would rewrite.
+    return <input
+        type="text"
+        inputMode="numeric"
+        placeholder="--:--"
+        value={props.value ?? ""}
+        onChange={(e) => props.onChange(e.target.value)}
+        className={`w-14 px-1 py-0.5 text-xs text-center rounded border bg-bg-100 text-text-100 focus:outline-none focus:border-accent-100 ${props.value ? "border-bg-300" : "border-red-400"}`}/>
 }
 
 function hasMissingTime(prayer) : boolean

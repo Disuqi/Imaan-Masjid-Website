@@ -127,6 +127,50 @@ function parseHijri(value: number | string) : number
     return hijri;
 }
 
+const MONTH_ABBREVIATION_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * Serialises a timetable back to the CSV shape the importer reads, so an
+ * exported file can be edited by hand and uploaded again unchanged.
+ */
+export function toCsv(timetable: ParsedTimetable) : string
+{
+    const header = `${MONTH_ABBREVIATION_NAMES[timetable.month]}-${String(timetable.year).slice(2)}`;
+    const rows = timetable.prayers.map((prayer) => [
+        new Date(prayer.date).getUTCDate(),
+        prayer.hijri ?? "",
+        prayer.fajr_adhan ?? "",
+        prayer.fajr_iqama ?? "",
+        prayer.sunrise ?? "",
+        prayer.dhuhr_adhan ?? "",
+        prayer.dhuhr_iqama ?? "",
+        prayer.asr_adhan ?? "",
+        prayer.asr_iqama ?? "",
+        prayer.mughrib_adhan ?? "",
+        prayer.isha_adhan ?? "",
+        prayer.isha_iqama ?? ""
+    ].join(","));
+
+    return [header, ...rows].join("\n") + "\n";
+}
+
+/** A filename that says which month it holds, e.g. "prayer-times-sep-2026.csv". */
+export function csvFilename(timetable: ParsedTimetable) : string
+{
+    return `prayer-times-${MONTH_ABBREVIATION_NAMES[timetable.month].toLowerCase()}-${timetable.year}.csv`;
+}
+
+/** Replaces one time on one day, returning a new timetable. */
+export function withEditedTime(timetable: ParsedTimetable, date: string, field: string, value: string) : ParsedTimetable
+{
+    return {
+        ...timetable,
+        prayers: timetable.prayers.map((prayer) =>
+            prayer.date == date ? {...prayer, [field]: value} : prayer)
+    };
+}
+
 /** Trims stray whitespace and CRs, and pads "5:30" out to "05:30". */
 function normaliseTime(value: string) : string
 {
