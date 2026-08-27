@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Footer from "@/app/components/footer";
 import Header from "@/app/components/header";
+import AppToaster from "@/app/components/elements/toaster";
 import '@fontsource/carrois-gothic';
 import '@fontsource/abril-fatface';
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             {children}
         </div>
         <Footer/>
+        <AppToaster/>
       </body>
     </html>
   )

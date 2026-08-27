@@ -1,12 +1,11 @@
 "use client"
 import Countdown from "react-countdown";
-import {useEffect, useState} from "react";
+import {useIsClient} from "@/lib/utils/useIsClient";
 
 export default function EventCountdown()
 {
-    const [inClient, setInClient] = useState(false);
+    const inClient = useIsClient();
 
-    useEffect(() =>{setInClient(true)}, []);
     const renderCountdown = ({days, hours, minutes, seconds, completed}) =>
     {
         if(completed)

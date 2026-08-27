@@ -11,7 +11,7 @@ export default function LinkButton(props: {href : string, className?: string, si
         className = "bg-primary-100 text-text-100 hover:bg-primary-200 hover:text-text-200 transition duration-150 ease-in-out font-default";
     }else
     {
-        let result = className.match("font");
+        const result = className.match("font");
         if (result == null || result.length == 0)
         {
             className += " font-default";

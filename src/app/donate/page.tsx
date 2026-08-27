@@ -1,6 +1,10 @@
 import {FaArrowDownLong} from "react-icons/fa6";
 import LinkButton from "@/app/components/buttons/linkButton";
 import Reveal from "@/app/components/elements/reveal";
+import Image from "next/image";
+import prayerRugImage from "../../../public/prayer-rug.png";
+import wallImage from "../../../public/wall.png";
+import loanImage from "../../../public/loan.png";
 
 export default function Page()
 {
@@ -52,17 +56,17 @@ export default function Page()
                             <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h1 className="font-black text-3xl m-2 text-accent-200">1.</h1>
                                 <h1 className="w-full">£350 Per Prayer Mat</h1>
-                                <img className="w-full h-32 object-contain" src="/prayer-rug.png" alt="prayer rug"/>
+                                <Image className="w-full h-32 object-contain" src={prayerRugImage} alt="prayer rug"/>
                             </div>
                             <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h1 className="font-black text-3xl m-2 text-accent-200">2.</h1>
                                 <h1 className="w-full">£50 Per Brick</h1>
-                                <img className="w-full h-24 object-contain" src="/wall.png" alt="brick wall"/>
+                                <Image className="w-full h-24 object-contain" src={wallImage} alt="brick wall"/>
                             </div>
                             <div className="flex flex-row items-center gap-2 bg-bg-200 border border-bg-300 rounded-xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h1 className="font-black text-3xl m-2 text-accent-200">3.</h1>
                                 <h1 className="w-full">Long Term Loan</h1>
-                                <img className="w-full h-28 object-contain" src="/loan.png" alt="money"/>
+                                <Image className="w-full h-28 object-contain" src={loanImage} alt="money"/>
                             </div>
                         </div>
                     </Reveal>

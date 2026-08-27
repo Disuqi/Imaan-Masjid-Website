@@ -8,6 +8,8 @@ import {LuMenu} from "react-icons/lu";
 import {widthToScreenSize} from "@/lib/utils/screen";
 import { getUser } from "@/lib/auth";
 import ImaanMasjidLogo from "./logo";
+import {ADMIN_AUTH_CHANGED} from "@/lib/utils/authEvents";
+import {describeError} from "@/lib/utils/errors";
 
 export default function Header()
 {
@@ -59,21 +61,24 @@ export default function Header()
         {
             setScrolled(window.scrollY > 8);
         }
+        const updateAdmin = () =>
+        {
+            // Only decides whether the ADMIN link shows, so failures stay quiet.
+            getUser()
+                .then((response) => setAdminSignedIn(response != null))
+                .catch((error) => console.error("Could not check the admin session: " + describeError(error, "unknown error")));
+        }
         window.addEventListener('resize', updateScreenSize);
         window.addEventListener('scroll', updateScrolled, { passive: true });
+        window.addEventListener(ADMIN_AUTH_CHANGED, updateAdmin);
         updateScreenSize();
         updateScrolled();
-        getUser().then((response) =>
-        {
-            if(response)
-            {
-                setAdminSignedIn(true);
-            }
-        });
+        updateAdmin();
 
         return () => {
             window.removeEventListener('resize', updateScreenSize);
             window.removeEventListener('scroll', updateScrolled);
+            window.removeEventListener(ADMIN_AUTH_CHANGED, updateAdmin);
         };
     }, []);
 
@@ -92,7 +97,7 @@ export default function Header()
                             currentScreenSize > ScreenSize.md ?
                             <div className="font-black flex flex-row gap-12 text-lg justify-center items-center mx-auto md:mx-0 md:ml-auto">
                                 {menuItems.map((item) =>
-                                    // eslint-disable-next-line react/jsx-key
+                                     
                                     (<div key={item.key}>
                                         <Link href={item.link} onClick={(e) => handleNav(e, item.link)}
                                               className="nav-link hover:text-accent-200 transition duration-150 ease-in-out cursor-pointer">{item.title}</Link>
@@ -114,7 +119,7 @@ export default function Header()
                                 <Drawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
                                     <div className="flex flex-col justify-start gap-2 items-start mt-10 w-full">
                                         {menuItems.map((item) =>
-                                            // eslint-disable-next-line react/jsx-key
+                                             
                                             (<Link key={item.key} onClick={(e) => { handleNav(e, item.link); setIsMenuOpen(false); }} href={item.link} scroll={true}
                                                    className="w-full pl-10 py-4 text-xl font-default font-semibold hover:bg-primary-100 transition duration-150 ease-in-out cursor-pointer">
                                                 {item.title}

@@ -1,6 +1,5 @@
 import React from "react";
 import {AspectRatio} from "@mui/joy";
-import LinkButton from "@/app/components/buttons/linkButton";
 import ImaanMasjidLogo from "./logo";
 
 export default function About()

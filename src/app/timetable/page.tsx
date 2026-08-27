@@ -7,8 +7,10 @@ import {
 import {SalahToEnglish, SalahType} from "@/lib/utils/salah";
 import {Sheet, Table} from "@mui/joy";
 import {DefaultMessage} from "@/app/components/defaultMessage";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import LoadingAnimation from "@/app/components/elements/loading";
+import toast from "react-hot-toast";
+import {describeError} from "@/lib/utils/errors";
 import { getPrayers } from "@/lib/prayers";
 import { DailyPrayer } from "@/lib/entities/dailyprayer";
 
@@ -18,31 +20,34 @@ export default function Page()
     const [prayers, setPrayers] = useState<DailyPrayer[]>([]);
     const [firstHijriMonth, setFirstHijriMonth] = useState<string>(null);
     const [lastHijriMonth, setLastHijriMonth] = useState<string>(null);
-    const [showEidSalah, setShowEidSalah] = useState(false);
-    const today = new Date();
+    // Stable across renders, so it can safely be an effect dependency.
+    const today = useMemo(() => new Date(), []);
 
     useEffect(() =>
     {
-        setLoading(true);
         const firstDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1));
         const lastDate = new Date(firstDate);
 
         lastDate.setMonth(lastDate.getMonth() + 1);
         lastDate.setDate(lastDate.getDate() - 1);
 
-        getPrayers(firstDate, lastDate).then((result) =>
-        {    
-            setPrayers(result);
-            setLoading(false);
-        });
-        apiHijriMonth(firstDate).then((result) => setFirstHijriMonth(result));
-        apiHijriMonth(lastDate).then((result) => setLastHijriMonth(result));
+        getPrayers(firstDate, lastDate)
+            .then((result) => setPrayers(result ?? []))
+            .catch((error) =>
+            {
+                setPrayers([]);
+                toast.error(describeError(error, "Could not load the timetable"));
+            })
+            .finally(() => setLoading(false));
 
-        if (today.getMonth() <= 6 && today.getDate() <= 6 && today.getFullYear() === 2025) 
-        {
-            setShowEidSalah(true);
-        }
-    }, []);
+        // Decorative: a failure just leaves the Hijri months blank.
+        apiHijriMonth(firstDate)
+            .then((result) => setFirstHijriMonth(result))
+            .catch((error) => console.error("Could not load the Hijri month: " + describeError(error, "unknown error")));
+        apiHijriMonth(lastDate)
+            .then((result) => setLastHijriMonth(result))
+            .catch((error) => console.error("Could not load the Hijri month: " + describeError(error, "unknown error")));
+    }, [today]);
 
     return <div className="mx-auto container m-5 max-w-vw relative">
         <LoadingAnimation state={loading}/>
@@ -55,9 +60,6 @@ export default function Page()
                             <h1 className="text-2xl font-medium text-primary-200">{firstHijriMonth}/{lastHijriMonth}</h1>}
                     </div>
                     <div className="my-5 overflow-auto animate-fade-up">
-                        {showEidSalah &&
-                            <h2 className="text-xl font-light text-primary-300">Eid Salah - 06/06/25 9:00am</h2>
-                        }
                         <Sheet className="min-w-[1000px] timetable-sheet">
                             <Table
                                 className="timetable-table"
