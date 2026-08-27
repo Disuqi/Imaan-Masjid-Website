@@ -29,16 +29,61 @@ function modelChain() : string[]
     return Array.from(new Set(chain));
 }
 
-function isTransient(error: unknown) : boolean
+function statusOf(error: unknown) : number
 {
     const status = typeof error == "object" && error != null ? (error as {status?: number}).status : undefined;
+    return typeof status == "number" ? status : null;
+}
+
+function isTransient(error: unknown) : boolean
+{
+    const status = statusOf(error);
 
     // No status at all means the request never got a reply (connection reset,
     // timeout), which is worth another attempt.
-    if(typeof status != "number")
+    if(status == null)
         return true;
 
     return TRANSIENT_STATUSES.has(status);
+}
+
+/**
+ * Explains why every model failed, in terms the admin can act on.
+ *
+ * Running out of quota and every model being overloaded need different advice —
+ * one is worth retrying in a minute, the other is not — so they get different
+ * messages rather than one catch-all.
+ */
+function describeAllFailed(failures: { model: string, detail: string, status: number }[]) : string
+{
+    const contact = `If it keeps happening, contact the developer at ${DEVELOPER_EMAIL}.`;
+
+    if(failures.length == 0)
+        return `The timetable could not be converted. ${contact}`;
+
+    if(failures.every((failure) => failure.status == 429))
+    {
+        const seconds = shortestRetryDelay(failures);
+        const when = seconds == null ? "Please try again later"
+            : seconds <= 120 ? `Please try again in about ${Math.max(1, Math.ceil(seconds / 10) * 10)} seconds`
+            : "The daily limit may have run out, so please try again later";
+
+        return `The conversion service has used up its request quota on all ${failures.length} models. ${when}. ${contact}`;
+    }
+
+    return `The conversion service is unavailable right now — all ${failures.length} models failed to respond. Please try again later. ${contact}`;
+}
+
+/** Reads the "Please retry in 48.19s" hint the API returns with a 429. */
+function shortestRetryDelay(failures: { detail: string }[]) : number
+{
+    const delays = failures
+        .map((failure) => failure.detail.match(/retry in ([\d.]+)s/i))
+        .filter((match) => match != null)
+        .map((match) => parseFloat(match[1]))
+        .filter((seconds) => !isNaN(seconds));
+
+    return delays.length == 0 ? null : Math.min(...delays);
 }
 
 /**
@@ -256,6 +301,7 @@ export async function convertTimetablePdf(formData: FormData) : Promise<Timetabl
 
     const ai = new GoogleGenAI({ apiKey });
     const models = modelChain();
+    const failures: { model: string, detail: string, status: number }[] = [];
     let outputText: string = null;
     let attempted = 0;
 
@@ -295,6 +341,7 @@ export async function convertTimetablePdf(formData: FormData) : Promise<Timetabl
         catch (error)
         {
             const detail = describeCause(error);
+            failures.push({ model: model, detail: detail, status: statusOf(error) });
             console.error(`Failed to read the timetable with ${model}. Error: ${detail}`);
 
             // A permanent problem fails the same way on every model, so stop and
@@ -306,10 +353,8 @@ export async function convertTimetablePdf(formData: FormData) : Promise<Timetabl
 
     if(outputText == null)
     {
-        // The one place worth naming the AI service: every model was unavailable,
-        // so there is nothing the admin can change about their file or input. A
-        // quota problem needs the developer, hence the address.
-        return { error: `The AI conversion service is unavailable right now, so the timetable could not be converted. Please try again later — if it keeps happening, contact the developer at ${DEVELOPER_EMAIL}.` };
+        console.error(`All ${models.length} models failed: ${failures.map((f) => `${f.model} (HTTP ${f.status})`).join(", ")}`);
+        return { error: describeAllFailed(failures) };
     }
 
     if(outputText == null || outputText.trim() == "")
