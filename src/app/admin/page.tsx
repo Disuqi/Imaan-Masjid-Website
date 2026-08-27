@@ -10,8 +10,10 @@ import AddPrayerTimesBtn from "@/app/components/buttons/addPrayerTimes";
 import {Size} from "@/lib/utils/size";
 import RemovePrayerTimesBtn from "@/app/components/buttons/removePrayerTimes";
 import { AdminUser, getUser, signOut } from "@/lib/auth";
-import {IoCalendarOutline, IoLockClosedOutline, IoLogOutOutline, IoTimeOutline} from "react-icons/io5";
+import {IoCalendarOutline, IoLockClosedOutline, IoLogOutOutline, IoMailOutline, IoTimeOutline} from "react-icons/io5";
 import ChangePasswordBtn from "@/app/components/buttons/changePassword";
+import CopyableEmail from "@/app/components/elements/copyableEmail";
+import {DEVELOPER_EMAIL} from "@/app/constants";
 import {notifyAdminAuthChanged} from "@/lib/utils/authEvents";
 import {describeError} from "@/lib/utils/errors";
 
@@ -98,7 +100,7 @@ return <main className="container mx-auto px-4 py-10 md:py-16 min-h-[54.65vh] re
                     <AdminSection
                         icon={<IoTimeOutline/>}
                         title="Prayer Times"
-                        description="Upload a month of prayer times from a CSV, or remove a month that was uploaded previously.">
+                        description="Upload a month of prayer times from a PDF or CSV, or remove a month that was uploaded previously.">
                         <AddPrayerTimesBtn/>
                         <RemovePrayerTimesBtn/>
                     </AdminSection>
@@ -108,6 +110,13 @@ return <main className="container mx-auto px-4 py-10 md:py-16 min-h-[54.65vh] re
                         title="Account"
                         description="Change the password used to sign in to this panel.">
                         <ChangePasswordBtn/>
+                    </AdminSection>
+
+                    <AdminSection
+                        icon={<IoMailOutline/>}
+                        title="Contact Developer"
+                        description="Something not working, or a timetable refusing to convert? Copy the address below and get in touch.">
+                        <CopyableEmail email={DEVELOPER_EMAIL}/>
                     </AdminSection>
                 </div>
             </div>

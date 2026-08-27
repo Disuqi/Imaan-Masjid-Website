@@ -2,6 +2,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { createAdminSupabaseClient } from "@/lib/supabase";
 import { TimetableRow } from "@/lib/utils/timetable";
+import { DEVELOPER_EMAIL } from "@/app/constants";
 import { checkUploadSize } from "@/lib/utils/upload";
 
 // Flash models are the ones covered by the free tier, in descending order of
@@ -305,9 +306,10 @@ export async function convertTimetablePdf(formData: FormData) : Promise<Timetabl
 
     if(outputText == null)
     {
-        // The one place worth naming the AI service: every model was busy, so
-        // there is nothing the admin can change about their file or input.
-        return { error: "The AI conversion service is unavailable right now, so the timetable could not be converted. Please try again later." };
+        // The one place worth naming the AI service: every model was unavailable,
+        // so there is nothing the admin can change about their file or input. A
+        // quota problem needs the developer, hence the address.
+        return { error: `The AI conversion service is unavailable right now, so the timetable could not be converted. Please try again later — if it keeps happening, contact the developer at ${DEVELOPER_EMAIL}.` };
     }
 
     if(outputText == null || outputText.trim() == "")
