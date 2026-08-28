@@ -21,15 +21,17 @@ const TRANSIENT_STATUSES = new Set([404, 408, 409, 425, 429, 500, 502, 503, 504]
 /**
  * Total time all model attempts may take.
  *
- * Each attempt re-uploads the whole payload, so three slow ones could run for
- * minutes — long enough for a gateway to abandon the request and answer 504.
- * The browser then gets no payload at all, so nothing this action returns is
- * ever seen. Finishing inside a budget is what makes its errors reachable.
+ * Each attempt re-uploads the whole payload, so several slow ones could run for
+ * minutes. The host kills the function first and answers 504 with no body, so
+ * nothing this action returns is ever seen and every failure looks identical.
+ *
+ * Kept below the 60s maxDuration declared in src/app/admin/layout.tsx, with
+ * room for the upload and the response on either side.
  */
-const TOTAL_BUDGET_MS = 50000;
+const TOTAL_BUDGET_MS = 45000;
 
 /** No single attempt may eat the whole budget. */
-const ATTEMPT_TIMEOUT_MS = 30000;
+const ATTEMPT_TIMEOUT_MS = 25000;
 
 /** Below this there is not enough time left for an attempt to be worth starting. */
 const MIN_ATTEMPT_MS = 8000;
