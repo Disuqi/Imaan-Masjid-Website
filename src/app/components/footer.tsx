@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {DEVELOPER_EMAIL} from "@/app/constants";
 
 export default function Footer() {
   return (
@@ -202,7 +203,7 @@ export default function Footer() {
               reserved.
             </p>
             <a
-              href="mailto:disuqi.hijazi.7@gmail.com?subject=Imaan%20Masjid%20website"
+              href={`mailto:${DEVELOPER_EMAIL}?subject=Imaan%20Masjid%20website`}
               className="flex flex-row items-center gap-1.5 text-xs opacity-60 hover:text-primary-100 hover:opacity-100 transition duration-100 ease-out"
             >
               <svg

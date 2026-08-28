@@ -1,4 +1,3 @@
-import {formatSupabaseTime} from "@/lib/utils/date";
 
 export enum SalahType
 {

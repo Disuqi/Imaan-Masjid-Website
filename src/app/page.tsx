@@ -14,8 +14,9 @@ export default function Page() {
   useEffect(() => {
     const img = new window.Image();
     img.onload = () => setBgLoaded(true);
+    // onload is assigned before src, so it fires even when the image comes
+    // straight from cache.
     img.src = "/pattern.png";
-    if (img.complete) setBgLoaded(true);
   }, []);
 
   return (

@@ -1,3 +1,6 @@
+/** Contact for site issues — used by the footer, the admin panel and error copy. */
+export const DEVELOPER_EMAIL = "disuqi.hijazi.7@gmail.com";
+
 export enum ScreenSize
 {
     sm = 640,

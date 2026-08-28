@@ -8,18 +8,20 @@ import {
     formatSupabaseTime,
 } from "@/lib/utils/date";
 import { SalahToArabic, SalahToEnglish, SalahType, parseSalahTimeToMinutes } from "@/lib/utils/salah";
-import { useEffect, useState } from "react";
-import LoadingAnimation from "./elements/loading";
+import { useEffect, useMemo, useState } from "react";
+import {useIsClient} from "@/lib/utils/useIsClient";
+import {describeError} from "@/lib/utils/errors";
 
 export default function DailyTimetable() {
     const [dailyPrayers, setDailyPrayers] = useState<DailyPrayer>(null);
     const [hijriDate, setHijriDate] = useState<string>("");
-    const [today, setToday] = useState<Date>(null);
     const [currentMinutes, setCurrentMinutes] = useState(-1);
+    // Resolved on the client only, so the server and the browser don't disagree
+    // about what "today" is during hydration.
+    const isClient = useIsClient();
+    const today = useMemo(() => isClient ? new Date() : null, [isClient]);
 
     useEffect(() => {
-        setToday(new Date());
-
         const updateTime = () => {
             const formatter = new Intl.DateTimeFormat("en-GB", {
                 timeZone: "Europe/London",
@@ -38,12 +40,18 @@ export default function DailyTimetable() {
 
     useEffect(() => {
         if (today == null) return;
-        getDailyPrayers(today).then(async (loadedDailyPrayers) => {
-            if (loadedDailyPrayers == null)
-                return;
-            setDailyPrayers(loadedDailyPrayers);
-        });
-        apiFormattedHijriDate(today).then((result) => setHijriDate(result));
+        getDailyPrayers(today)
+            .then((loadedDailyPrayers) => {
+                if (loadedDailyPrayers == null)
+                    return;
+                setDailyPrayers(loadedDailyPrayers);
+            })
+            .catch((error) => console.error("Could not load today's prayer times: " + describeError(error, "unknown error")));
+
+        // Decorative: a failure just leaves the Hijri date blank.
+        apiFormattedHijriDate(today)
+            .then((result) => setHijriDate(result))
+            .catch((error) => console.error("Could not load the Hijri date: " + describeError(error, "unknown error")));
     }, [today]);
 
     let upcomingSalah: SalahType | null = null;

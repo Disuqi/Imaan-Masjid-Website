@@ -1,34 +1,36 @@
 "use client"
 import {useState} from "react";
-import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
-import LoadingAnimation from "@/app/components/elements/loading";
-import {Size} from "@/lib/utils/size";
+import {Button} from "@mui/joy";
 import AddPrayerTimesForm from "@/app/components/forms/addPrayerTimes";
+import FormModal from "@/app/components/elements/formModal";
+import {IoCloudUploadOutline} from "react-icons/io5";
 
-export default function AddEventBtn()
+export default function AddPrayerTimesBtn()
 {
     const [modalState, setModalState] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-    const closeModal = () =>
-    {
-        if (!loading)
-            setModalState(false);
-    };
+    // Null means "not loading"; a string is what to show over the dialog.
+    const [loadingText, setLoadingText] = useState<string>(null);
 
     return <>
-        <Button component="div" size="lg" onClick={() => setModalState(true)}>
-            Add
+        <Button component="div" size="lg" startDecorator={<IoCloudUploadOutline/>} onClick={() => setModalState(true)}
+                className="!bg-accent-100 hover:!bg-accent-200 !text-white transition duration-150 ease-in-out">
+            Upload Month
         </Button>
-        <Modal open={modalState} onClose={closeModal}>
-            <ModalDialog>
-                <LoadingAnimation state={loading} text="Uploading" size={Size.M}/>
-                <ModalClose/>
-                <DialogTitle>Add Prayer Times</DialogTitle>
-                <DialogContent>
-                    <AddPrayerTimesForm onStart={() => setLoading(true)} onComplete={() => { setModalState(false); setLoading(false); }}/>
-                </DialogContent>
-            </ModalDialog>
-        </Modal>
+        <FormModal
+            open={modalState}
+            wide
+            title="Add Prayer Times"
+            description="Upload one month at a time. A PDF is read for you; a CSV is used as-is and needs a month/year header row."
+            loading={loadingText != null}
+            loadingText={loadingText}
+            onClose={() => setModalState(false)}>
+            <AddPrayerTimesForm
+                onLoading={setLoadingText}
+                onComplete={(success) =>
+                {
+                    if(success)
+                        setModalState(false);
+                }}/>
+        </FormModal>
     </>
 }

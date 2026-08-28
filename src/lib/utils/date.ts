@@ -1,30 +1,68 @@
 import {format} from "date-fns";
 
-export async function apiFormattedHijriDate(date: Date): Promise<string>
+/**
+ * Hijri dates come from a third-party API, so every call here can fail or come
+ * back in an unexpected shape. Both helpers return null on failure instead of
+ * throwing: the Hijri date is decoration next to the prayer times, and it must
+ * never take a page down with it.
+ */
+type HijriDate =
 {
-    const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`);
-    const data = (await response.json()).data;
-    return data.hijri.day + " " + data.hijri.month.en + " " + data.hijri.year + " " + data.hijri.designation.abbreviated;
+    day?: string,
+    month?: { en?: string },
+    year?: string,
+    designation?: { abbreviated?: string }
+};
+
+async function fetchHijri(date: Date) : Promise<HijriDate>
+{
+    try
+    {
+        const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`,
+            { signal: AbortSignal.timeout(8000) });
+
+        if(!response.ok)
+        {
+            console.error(`Hijri date lookup failed with HTTP ${response.status}`);
+            return null;
+        }
+
+        const hijri = (await response.json())?.data?.hijri as HijriDate;
+        return hijri ?? null;
+    }
+    catch (error)
+    {
+        console.error("Hijri date lookup failed: " + (error instanceof Error ? error.message : String(error)));
+        return null;
+    }
 }
 
-export async function apiHijriMonth(date: Date)
+export async function apiFormattedHijriDate(date: Date): Promise<string>
 {
-    const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${format(date, "dd-MM-yyyy")}`);
-    const data = (await response.json()).data;
-    return data.hijri.month.en;
+    const hijri = await fetchHijri(date);
+    if(hijri?.day == null || hijri?.month?.en == null || hijri?.year == null)
+        return null;
+
+    const designation = hijri.designation?.abbreviated ?? "";
+    return `${hijri.day} ${hijri.month.en} ${hijri.year} ${designation}`.trim();
+}
+
+export async function apiHijriMonth(date: Date) : Promise<string>
+{
+    const hijri = await fetchHijri(date);
+    return hijri?.month?.en ?? null;
 }
 
 export function formatDateWithSuffix(date: Date) {
-    const options = {
+    const options: Intl.DateTimeFormatOptions = {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
         year: 'numeric'
     };
 
-    // @ts-ignore
     const formatter = new Intl.DateTimeFormat('en-UK', options);
-    let formattedDate = formatter.format(date);
+    const formattedDate = formatter.format(date);
 
     const day = date.getDate();
     const ordinalSuffix = getOrdinalSuffix(day);
@@ -34,10 +72,9 @@ export function formatDateWithSuffix(date: Date) {
 
 export function getMonth(date: Date)
 {
-    const options = {
+    const options: Intl.DateTimeFormatOptions = {
         month: 'long',
     };
-    // @ts-ignore
     return date.toLocaleDateString('en-UK', options);
 }
 
