@@ -47,43 +47,106 @@ function isTransient(error: unknown) : boolean
     return TRANSIENT_STATUSES.has(status);
 }
 
+type QuotaFailure =
+{
+    /** True when the exhausted quota is a per-day one. */
+    perDay: boolean,
+    /** The quota's own id, e.g. GenerateRequestsPerDayPerProjectPerModel-FreeTier. */
+    quotaId: string,
+    /** The allowance that was used up, when the API reports it. */
+    quotaValue: string,
+    /** google.rpc.RetryInfo, in seconds. */
+    retrySeconds: number
+};
+
+/**
+ * Reads the structured quota details Google attaches to a 429.
+ *
+ * The prose message is not enough to act on: it carries a RetryInfo delay even
+ * for a per-day quota, where waiting that long changes nothing. The quota id in
+ * the QuotaFailure detail is what distinguishes "wait a minute" from "wait until
+ * the daily allowance resets".
+ */
+async function readQuotaFailure(error: unknown) : Promise<QuotaFailure>
+{
+    const body = typeof error == "object" && error != null ? (error as {body?: unknown}).body : null;
+    if(body == null)
+        return null;
+
+    let parsed: unknown;
+    try
+    {
+        parsed = typeof body == "string" ? JSON.parse(body) : body;
+    }
+    catch
+    {
+        return null;
+    }
+
+    const first = Array.isArray(parsed) ? parsed[0] : parsed;
+    const details = (first as {error?: {details?: unknown[]}})?.error?.details;
+    if(!Array.isArray(details))
+        return null;
+
+    const quota = details.find((d) => typeof (d as {"@type"?: string})?.["@type"] == "string"
+        && (d as {"@type": string})["@type"].endsWith("QuotaFailure")) as
+        {violations?: {quotaId?: string, quotaValue?: string}[]};
+    const retry = details.find((d) => typeof (d as {"@type"?: string})?.["@type"] == "string"
+        && (d as {"@type": string})["@type"].endsWith("RetryInfo")) as {retryDelay?: string};
+
+    const violation = quota?.violations?.[0];
+    const quotaId = violation?.quotaId ?? null;
+    const retrySeconds = retry?.retryDelay != null ? parseFloat(String(retry.retryDelay).replace(/s$/, "")) : null;
+
+    if(quotaId == null && retrySeconds == null)
+        return null;
+
+    return {
+        // Per-model daily allowances are the ones that cannot be waited out.
+        perDay: quotaId != null && /perday/i.test(quotaId),
+        quotaId: quotaId,
+        quotaValue: violation?.quotaValue ?? null,
+        retrySeconds: isNaN(retrySeconds) ? null : retrySeconds
+    };
+}
+
 /**
  * Explains why every model failed, in terms the admin can act on.
  *
- * Running out of quota and every model being overloaded need different advice —
- * one is worth retrying in a minute, the other is not — so they get different
- * messages rather than one catch-all.
+ * A daily allowance and a per-minute burst both arrive as 429s but need
+ * opposite advice, so they are told apart rather than sharing one message.
  */
-function describeAllFailed(failures: { model: string, detail: string, status: number }[]) : string
+function describeAllFailed(
+    failures: { model: string, detail: string, status: number }[],
+    quota: QuotaFailure) : string
 {
-    const contact = `If it keeps happening, contact the developer at ${DEVELOPER_EMAIL}.`;
+    const contact = `Contact the developer at ${DEVELOPER_EMAIL}`;
 
     if(failures.length == 0)
-        return `The timetable could not be converted. ${contact}`;
+        return `The timetable could not be converted. ${contact}.`;
 
     if(failures.every((failure) => failure.status == 429))
     {
-        const seconds = shortestRetryDelay(failures);
-        const when = seconds == null ? "Please try again later"
-            : seconds <= 120 ? `Please try again in about ${Math.max(1, Math.ceil(seconds / 10) * 10)} seconds`
-            : "The daily limit may have run out, so please try again later";
+        const allowance = quota?.quotaValue != null ? ` (${quota.quotaValue} requests per model)` : "";
 
-        return `The conversion service has used up its request quota on all ${failures.length} models. ${when}. ${contact}`;
+        if(quota?.perDay)
+        {
+            // Deliberately no "try again in N seconds" here: RetryInfo suggests
+            // one even for a daily quota, and following it just fails again.
+            return `The daily quota for the conversion service has run out on all ${failures.length} models${allowance}. `
+                + `It resets at midnight US Pacific time. Upload the timetable as a CSV instead, or try again tomorrow. ${contact} to raise the limit.`;
+        }
+
+        const seconds = quota?.retrySeconds;
+        const when = seconds == null || seconds > 300 ? "Please try again shortly"
+            : `Please try again in about ${Math.max(10, Math.ceil(seconds / 10) * 10)} seconds`;
+
+        return `The conversion service is rate limited on all ${failures.length} models${allowance}. ${when}, `
+            + `or upload the timetable as a CSV instead. ${contact} if it keeps happening.`;
     }
 
-    return `The conversion service is unavailable right now — all ${failures.length} models failed to respond. Please try again later. ${contact}`;
-}
-
-/** Reads the "Please retry in 48.19s" hint the API returns with a 429. */
-function shortestRetryDelay(failures: { detail: string }[]) : number
-{
-    const delays = failures
-        .map((failure) => failure.detail.match(/retry in ([\d.]+)s/i))
-        .filter((match) => match != null)
-        .map((match) => parseFloat(match[1]))
-        .filter((seconds) => !isNaN(seconds));
-
-    return delays.length == 0 ? null : Math.min(...delays);
+    return `The conversion service is unavailable right now — all ${failures.length} models failed to respond. `
+        + `Please try again later, or upload the timetable as a CSV instead. ${contact} if it keeps happening.`;
 }
 
 /**
@@ -319,6 +382,7 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
     const ai = new GoogleGenAI({ apiKey });
     const models = modelChain();
     const failures: { model: string, detail: string, status: number }[] = [];
+    let quota: QuotaFailure = null;
     let outputText: string = null;
     let attempted = 0;
 
@@ -359,7 +423,12 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
         catch (error)
         {
             const detail = describeCause(error);
-            failures.push({ model: model, detail: detail, status: statusOf(error) });
+            const status = statusOf(error);
+            failures.push({ model: model, detail: detail, status: status });
+
+            if(status == 429 && quota == null)
+                quota = await readQuotaFailure(error);
+
             console.error(`Failed to read the timetable with ${model}. Error: ${detail}`);
 
             // A permanent problem fails the same way on every model, so stop and
@@ -371,8 +440,9 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
 
     if(outputText == null)
     {
-        console.error(`All ${models.length} models failed: ${failures.map((f) => `${f.model} (HTTP ${f.status})`).join(", ")}`);
-        return { error: describeAllFailed(failures) };
+        console.error(`All ${models.length} models failed: ${failures.map((f) => `${f.model} (HTTP ${f.status})`).join(", ")}`
+            + (quota != null ? ` | quota ${quota.quotaId} (${quota.quotaValue ?? "?"}), perDay=${quota.perDay}` : ""));
+        return { error: describeAllFailed(failures, quota) };
     }
 
     if(outputText == null || outputText.trim() == "")
