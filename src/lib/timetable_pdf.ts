@@ -19,6 +19,22 @@ const FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-3.5-flash", "gemini-3.5-fla
 const TRANSIENT_STATUSES = new Set([404, 408, 409, 425, 429, 500, 502, 503, 504]);
 
 /**
+ * Total time all model attempts may take.
+ *
+ * Each attempt re-uploads the whole payload, so three slow ones could run for
+ * minutes — long enough for a gateway to abandon the request and answer 504.
+ * The browser then gets no payload at all, so nothing this action returns is
+ * ever seen. Finishing inside a budget is what makes its errors reachable.
+ */
+const TOTAL_BUDGET_MS = 50000;
+
+/** No single attempt may eat the whole budget. */
+const ATTEMPT_TIMEOUT_MS = 30000;
+
+/** Below this there is not enough time left for an attempt to be worth starting. */
+const MIN_ATTEMPT_MS = 8000;
+
+/**
  * The models to try, in order. GEMINI_MODEL, when set, is preferred but still
  * falls back to the rest.
  */
@@ -118,12 +134,19 @@ async function readQuotaFailure(error: unknown) : Promise<QuotaFailure>
  */
 function describeAllFailed(
     failures: { model: string, detail: string, status: number }[],
-    quota: QuotaFailure) : string
+    quota: QuotaFailure,
+    ranOutOfTime: boolean) : string
 {
     const contact = `Contact the developer at ${DEVELOPER_EMAIL}`;
 
     if(failures.length == 0)
         return `The timetable could not be converted. ${contact}.`;
+
+    if(ranOutOfTime && !failures.every((failure) => failure.status == 429))
+    {
+        return `The conversion service took too long to answer. Please try again, `
+            + `or upload the timetable as a CSV instead. ${contact} if it keeps happening.`;
+    }
 
     if(failures.every((failure) => failure.status == 429))
     {
@@ -383,13 +406,24 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
     const models = modelChain();
     const failures: { model: string, detail: string, status: number }[] = [];
     let quota: QuotaFailure = null;
+    const startedAt = Date.now();
+    let ranOutOfTime = false;
     let outputText: string = null;
     let attempted = 0;
 
     for(const model of models)
     {
+        const remaining = TOTAL_BUDGET_MS - (Date.now() - startedAt);
+        if(remaining < MIN_ATTEMPT_MS)
+        {
+            ranOutOfTime = true;
+            console.warn(`Stopping after ${attempted} of ${models.length} models: out of time with ${Math.round(remaining / 1000)}s left.`);
+            break;
+        }
+
         attempted++;
-        console.log(`Reading the timetable with ${model} (attempt ${attempted} of ${models.length})…`);
+        const timeout = Math.min(ATTEMPT_TIMEOUT_MS, remaining);
+        console.log(`Reading the timetable with ${model} (attempt ${attempted} of ${models.length}, ${Math.round(timeout / 1000)}s allowed)…`);
         try
         {
             const interaction = await ai.interactions.create({
@@ -410,7 +444,7 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
                 // retry fails with "TypeError: unusable" and hides whatever the
                 // first attempt actually returned (a quota or validation error).
                 retries: { strategy: "none" },
-                timeout_ms: 120000
+                timeout_ms: timeout
             });
 
             outputText = interaction.output_text;
@@ -440,9 +474,11 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
 
     if(outputText == null)
     {
-        console.error(`All ${models.length} models failed: ${failures.map((f) => `${f.model} (HTTP ${f.status})`).join(", ")}`
-            + (quota != null ? ` | quota ${quota.quotaId} (${quota.quotaValue ?? "?"}), perDay=${quota.perDay}` : ""));
-        return { error: describeAllFailed(failures, quota) };
+        console.error(`${attempted} of ${models.length} models failed in ${Math.round((Date.now() - startedAt) / 1000)}s: `
+            + failures.map((f) => `${f.model} (HTTP ${f.status})`).join(", ")
+            + (quota != null ? ` | quota ${quota.quotaId} (${quota.quotaValue ?? "?"}), perDay=${quota.perDay}` : "")
+            + (ranOutOfTime ? " | stopped early, out of time" : ""));
+        return { error: describeAllFailed(failures, quota, ranOutOfTime) };
     }
 
     if(outputText == null || outputText.trim() == "")
