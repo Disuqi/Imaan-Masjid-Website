@@ -91,7 +91,7 @@ export default function AddPrayerTimesForm(props: {
      */
     const runConversion = async (formData: FormData) =>
     {
-        props.onLoading("Reading the timetable…");
+        props.onLoading("Reading the timetable — this can take a minute or two…");
 
         const result = await readTimetable(formData);
         if(result.error != null)
