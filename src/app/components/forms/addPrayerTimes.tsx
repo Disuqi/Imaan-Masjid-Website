@@ -30,7 +30,9 @@ const BATCH_SIZE = 8;
 
 export default function AddPrayerTimesForm(props: {
     onLoading: (text: string) => void,
-    onComplete: (success: boolean) => void
+    onComplete: (success: boolean) => void,
+    /** True once a file is chosen, so closing can ask before discarding it. */
+    onDirtyChange?: (dirty: boolean) => void
 })
 {
     const [file, setFile] = useState<File>(null);
@@ -48,7 +50,9 @@ export default function AddPrayerTimesForm(props: {
         setParsed(null);
         setConflict(null);
         setComparing(false);
-        setFile(e.target.files?.[0] ?? null);
+        const chosen = e.target.files?.[0] ?? null;
+        setFile(chosen);
+        props.onDirtyChange?.(chosen != null);
     }
 
     const startOver = () =>
@@ -57,6 +61,7 @@ export default function AddPrayerTimesForm(props: {
         setConflict(null);
         setComparing(false);
         setFile(null);
+        props.onDirtyChange?.(false);
         if(inputRef.current)
             inputRef.current.value = "";
     }
