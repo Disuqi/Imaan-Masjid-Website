@@ -1,6 +1,6 @@
 "use client"
-import {DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
-import {ReactNode} from "react";
+import {Button, DialogContent, DialogTitle, Modal, ModalClose, ModalDialog} from "@mui/joy";
+import {ReactNode, useState} from "react";
 import LoadingAnimation from "@/app/components/elements/loading";
 import {Size} from "@/lib/utils/size";
 
@@ -17,16 +17,39 @@ export default function FormModal(props: {
     loadingText?: string,
     /** Roomier dialog, for content like a review table. */
     wide?: boolean,
+    /**
+     * Close only via the X button, ignoring backdrop clicks and Escape. For
+     * dialogs holding work that a stray click outside would throw away.
+     */
+    closeOnlyWithButton?: boolean,
+    /** When set, the X asks for confirmation with this message before closing. */
+    confirmCloseMessage?: string,
     onClose: () => void,
     children: ReactNode
 })
 {
+    const [confirming, setConfirming] = useState(false);
+
     // While something is uploading, closing would leave the work half-done with
     // no way to observe it, so backdrop/escape/close are all inert.
-    const requestClose = () =>
+    const requestClose = (_event: unknown, reason: "backdropClick" | "escapeKeyDown" | "closeClick") =>
     {
-        if(!props.loading)
-            props.onClose();
+        if(props.loading)
+            return;
+        if(props.closeOnlyWithButton && reason != "closeClick")
+            return;
+        if(props.confirmCloseMessage)
+        {
+            setConfirming(true);
+            return;
+        }
+        props.onClose();
+    };
+
+    const confirmClose = () =>
+    {
+        setConfirming(false);
+        props.onClose();
     };
 
     // The entrance animation is opacity-only on purpose: Joy centres the dialog
@@ -51,6 +74,20 @@ export default function FormModal(props: {
                 {props.children}
             </DialogContent>
             <LoadingAnimation state={props.loading} text={props.loadingText} size={Size.M}/>
+            {confirming &&
+                <div role="alertdialog" aria-label="Confirm close"
+                     className="absolute inset-0 z-30 rounded-[inherit] bg-bg-100/90 backdrop-blur-sm flex flex-col justify-center items-center gap-4 p-6 text-center animate-fade-in">
+                    <p className="font-semibold text-lg">Are you sure?</p>
+                    <p className="text-sm text-text-200 max-w-sm">{props.confirmCloseMessage}</p>
+                    <div className="flex flex-row gap-2">
+                        <Button component="div" variant="plain" color="neutral" onClick={() => setConfirming(false)}>
+                            Keep working
+                        </Button>
+                        <Button component="div" color="danger" onClick={confirmClose}>
+                            Discard and close
+                        </Button>
+                    </div>
+                </div>}
         </ModalDialog>
     </Modal>
 }

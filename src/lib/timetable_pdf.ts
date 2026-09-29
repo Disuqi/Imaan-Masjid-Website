@@ -5,10 +5,13 @@ import { TimetableRow } from "@/lib/utils/timetable";
 import { DEVELOPER_EMAIL } from "@/app/constants";
 import { checkUploadSize } from "@/lib/utils/upload";
 
-// Flash models are the ones covered by the free tier, in descending order of
-// capability. Tried in turn when one is overloaded: a 500 "experiencing high
-// demand" is specific to a single model, so the next one usually works.
-const FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite"];
+// Newest Flash first, then a lite model. Under heavy load Google refuses the
+// full Flash models with 503 "high demand" — sometimes only after 40s+ — while
+// the lite tier keeps answering (it read the October 2026 timetable correctly
+// in 16s when every full Flash model was refusing). So the chain must reach a
+// lite model inside the budget rather than spend it all on the heavy ones.
+// Check `ai.models.list()` when updating: retired models answer 404.
+const FALLBACK_MODELS = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite"];
 
 /**
  * Statuses worth trying another model for. Deliberately excludes 400 (the
@@ -21,20 +24,19 @@ const TRANSIENT_STATUSES = new Set([404, 408, 409, 425, 429, 500, 502, 503, 504]
 /**
  * Total time all model attempts may take.
  *
- * Each attempt re-uploads the whole payload, so several slow ones could run for
- * minutes. The host kills the function first and answers 504 with no body, so
- * nothing this action returns is ever seen and every failure looks identical.
- *
- * Kept below the 60s maxDuration declared in src/app/admin/layout.tsx, with
- * room for the upload and the response on either side.
+ * Sized from real runs, not mocks: a successful one-page read took 16-38s, and
+ * an overloaded model spent up to ~45s before answering 503. Two refusals plus
+ * a successful lite read must fit. Kept below the 300s maxDuration in
+ * src/app/admin/layout.tsx so the action still answers, rather than being
+ * killed with no body, if every model fails.
  */
-const TOTAL_BUDGET_MS = 45000;
+const TOTAL_BUDGET_MS = 240000;
 
-/** No single attempt may eat the whole budget. */
-const ATTEMPT_TIMEOUT_MS = 25000;
+/** Long enough for a slow success (~40s), short enough to leave the others time. */
+const ATTEMPT_TIMEOUT_MS = 60000;
 
 /** Below this there is not enough time left for an attempt to be worth starting. */
-const MIN_ATTEMPT_MS = 8000;
+const MIN_ATTEMPT_MS = 15000;
 
 /**
  * The models to try, in order. GEMINI_MODEL, when set, is preferred but still
@@ -387,7 +389,9 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
                 mime_type: page.type || "image/webp",
                 // A timetable is a dense grid of small digits, so detail matters
                 // more here than token cost.
-                resolution: "ultra_high" as const
+                // "high" rather than "ultra_high": on a real 2200px timetable it gave
+                // the same transcription and was faster.
+                resolution: "high" as const
             });
         }
     }
@@ -439,7 +443,10 @@ async function convertTimetable(formData: FormData) : Promise<TimetableConversio
                     type: "text",
                     mime_type: "application/json",
                     schema: RESPONSE_SCHEMA
-                }
+                },
+                // Transcription needs little reasoning; default thinking added
+                // ~8s to a real read with no change in the result.
+                generation_config: { thinking_level: "low" }
             }, {
                 // Retries are disabled deliberately. The SDK retries by re-sending
                 // the same Request, whose body has already been consumed, so the
